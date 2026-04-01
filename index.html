@@ -135,6 +135,43 @@ mark{background:var(--gl);color:var(--nv);padding:0 2px;border-radius:2px}
 
 .logo-img{height:38px;width:auto;opacity:0.85}
 .eq-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.eq-tag{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:600;letter-spacing:.3px;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}.eq-mahle{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}.eq-nubo{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}.eq-label{opacity:.7;font-weight:400;font-size:9px;text-transform:uppercase}.eq-search-hint{font-size:11px;color:rgba(255,255,255,.55);margin-top:4px;text-align:center;padding:0 12px}
+
+.hero{background:linear-gradient(135deg,var(--nv) 0%,#001240 100%);color:var(--wh);padding:18px 16px 14px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 50%,rgba(212,168,67,.08) 0%,transparent 70%);pointer-events:none}
+.hero-title{font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:.7;margin-bottom:6px}
+.hero-main{font-size:22px;font-weight:800;margin-bottom:8px;background:linear-gradient(90deg,var(--wh),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.hero-badge{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;backdrop-filter:blur(4px);white-space:nowrap}
+.hero-badge svg{width:14px;height:14px;flex-shrink:0}
+.hero-badge .hb-gold{color:var(--gl)}
+@keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero-badge .hb-num{animation:countUp .6s ease forwards}
+.hero-close{position:absolute;top:6px;right:10px;background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;padding:4px}
+.hero-close:hover{color:rgba(255,255,255,.8)}
+
+.srch-suggest{display:none;padding:8px 16px 4px;gap:6px;flex-wrap:wrap;background:var(--wh);border-bottom:1px solid var(--g200)}
+.srch-suggest.sh{display:flex}
+.srch-suggest .ss-label{font-size:10px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.5px;width:100%;margin-bottom:2px}
+.ss-chip{padding:6px 12px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--g200);background:var(--g50);color:var(--g700);transition:all .2s;white-space:nowrap}
+.ss-chip:hover{border-color:var(--nv);color:var(--nv);background:var(--wh)}
+.ss-chip.ss-hot{border-color:var(--gd);background:rgba(212,168,67,.08);color:#92400e}
+.ss-chip.ss-hot::before{content:'';display:inline-block;width:6px;height:6px;background:var(--gd);border-radius:50%;margin-right:5px}
+
+.tag-pop{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:6px;background:linear-gradient(135deg,#fef3e2,#fde68a);color:#92400e;border:1px solid #fcd34d;white-space:nowrap;margin-left:6px;flex-shrink:0}
+.tag-pop svg{width:10px;height:10px}
+
+@keyframes cartBounce{0%{transform:scale(1)}30%{transform:scale(1.4)}60%{transform:scale(.9)}100%{transform:scale(1)}}
+@keyframes addPulse{0%{box-shadow:0 0 0 0 rgba(0,24,96,.3)}70%{box-shadow:0 0 0 12px rgba(0,24,96,0)}100%{box-shadow:0 0 0 0 rgba(0,24,96,0)}}
+@keyframes successFlash{0%{background:var(--nv)}50%{background:#16a34a}100%{background:var(--nv)}}
+@keyframes flyToCart{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+.cb.bounce{animation:cartBounce .4s ease}
+.ab.pulse{animation:addPulse .5s ease}
+.ab.success{animation:successFlash .6s ease}
+.cbg.pop{animation:cartBounce .4s ease}
+.fly-dot{position:fixed;width:12px;height:12px;background:var(--gd);border-radius:50%;pointer-events:none;z-index:999;animation:flyToCart .5s ease-in forwards}
+
+.tag-ready{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:600;letter-spacing:.3px;padding:3px 8px;border-radius:6px;background:#ecfdf5;color:#166534;border:1px solid #a7f3d0;white-space:nowrap}
+.tag-ready svg{width:10px;height:10px}
 </style>
 </head>
 <body>
@@ -156,6 +193,29 @@ mark{background:var(--gl);color:var(--nv);padding:0 2px;border-radius:2px}
   </div>
   <div class="sh-hint">Busc&aacute; por c&oacute;digo, marca, motor, OEM o medidas</div>
 </header>
+<div class="hero" id="heroBanner">
+  <button class="hero-close" onclick="document.getElementById('heroBanner').style.display='none'">&times;</button>
+  <div class="hero-title">Fabricantes desde 1965 &bull; Rafaela, Argentina</div>
+  <div class="hero-main">+2.500 productos listos para despacho</div>
+  <div class="hero-badges">
+    <div class="hero-badge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg><span class="hb-gold">F&aacute;brica propia</span></div>
+    <div class="hero-badge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Exportamos a +15 pa&iacute;ses</div>
+    <div class="hero-badge"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Equivalencias MAHLE &amp; NUBO</div>
+  </div>
+</div>
+<div class="srch-suggest" id="srchSuggest">
+  <span class="ss-label">B&uacute;squedas populares</span>
+  <button class="ss-chip ss-hot" onclick="doSuggest('FIAT 128')">FIAT 128</button>
+  <button class="ss-chip ss-hot" onclick="doSuggest('Cummins B')">Cummins B</button>
+  <button class="ss-chip" onclick="doSuggest('VW Golf')">VW Golf</button>
+  <button class="ss-chip" onclick="doSuggest('Toyota Hilux')">Toyota Hilux</button>
+  <button class="ss-chip" onclick="doSuggest('Mercedes OM 352')">MB OM 352</button>
+  <button class="ss-chip" onclick="doSuggest('Ford Falcon')">Ford Falcon</button>
+  <button class="ss-chip" onclick="doSuggest('Peugeot 504')">Peugeot 504</button>
+  <button class="ss-chip" onclick="doSuggest('Renault Clio')">Renault Clio</button>
+  <button class="ss-chip" onclick="doSuggest('Scania')">Scania</button>
+  <button class="ss-chip" onclick="doSuggest('MAHLE')">MAHLE</button>
+</div>
 <div class="cats" id="cats"></div>
 <div class="dim-bar" id="dimBar"></div>
 <div class="ri" id="rI"></div>
@@ -229,7 +289,6 @@ function bCats(){
     var c=keys[j];
     h+='<button class="cc" data-cat="'+esc(c)+'" onclick="sCatF(this)">'+esc(c)+' <span style="opacity:.5;font-size:10px">('+seen[c]+')</span></button>';
   }
-  h+='<a href="custom.html" class="cc" style="text-decoration:none;background:var(--nv);color:var(--gd);font-weight:700">⚙ Custom Guide</a>';
   el.innerHTML=h;
 }
 
@@ -369,7 +428,9 @@ function render(){
     h+='<div class="pc" style="animation-delay:'+delay+'s">';
     h+='<div class="ph" onclick="tDet(\'d'+i+'\')">';
     h+='<div class="pm"><div class="p-code">'+hi(p.c)+'</div><div class="p-desc">'+hi(p.d)+'</div></div>';
-    h+='<span class="p-badge">'+esc(p.cat.split(" ")[0])+'</span>';
+    var badges='<span class="p-badge">'+esc(p.cat.split(" ")[0])+'</span>';
+    if(POPULAR_CODES[p.c]) badges='<span class="tag-pop"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>Popular</span>'+badges;
+    h+=badges;
     h+='</div>';
     h+='<div class="pd" id="d'+i+'">';
 
@@ -380,6 +441,7 @@ function render(){
     if(p.o) h+='<span class="mt mt-o">OEM: '+hi(p.o)+'</span>';
     if(p.q>0) h+='<span class="mt mt-q">'+p.q+' u/juego</span>';
     h+='</div>';
+    if(p.q>0) h+='<div style="margin-bottom:10px"><span class="tag-ready"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Despacho inmediato</span></div>';
 
     // Specs
     if(sp.length>0){
@@ -402,7 +464,7 @@ function render(){
       }
     } else {
       var btnLabel=p.q>0?"Agregar juego ("+p.q+" u.)":"Agregar al pedido";
-      h+='<button class="ab" onclick="event.stopPropagation();aC(\''+safeCode+'\')">';
+      h+='<button class="ab" onclick="event.stopPropagation();aC(\''+safeCode+'\',this)">';
       h+='<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>';
       h+=btnLabel+'</button>';
     }
@@ -500,11 +562,22 @@ function getXSell(){
   return suggestions.slice(0,5);
 }
 
-function aC(c){
+function aC(c,el){
   var p=null;
   for(var i=0;i<D.length;i++){if(D[i].c===c){p=D[i];break;}}
   if(!p) return;
   cart[c]={c:p.c,d:p.d,cat:p.cat,q:p.q,qty:1};
+  // Micro-animations
+  if(el){
+    el.classList.add("success");
+    flyToCart(el);
+    setTimeout(function(){el.classList.remove("success")},650);
+  }
+  var cbtn=document.querySelector(".cb");
+  cbtn.classList.remove("bounce");void cbtn.offsetWidth;cbtn.classList.add("bounce");
+  var bdg=document.getElementById("cBdg");
+  bdg.classList.remove("pop");void bdg.offsetWidth;bdg.classList.add("pop");
+  setTimeout(function(){cbtn.classList.remove("bounce");bdg.classList.remove("pop")},500);
   uUI();render();
 }
 
@@ -663,6 +736,43 @@ function deb(fn,dl){
     t=setTimeout(function(){fn.apply(self,a)},dl);
   };
 }
+
+// === NEUROMARKETING ENHANCEMENTS ===
+// Popular products: top 20 by quantity (q field)
+var POPULAR_CODES=(function(){var s=D.slice().filter(function(p){return p.q>0}).sort(function(a,b){return b.q-a.q});var c={};for(var i=0;i<Math.min(25,s.length);i++)c[s[i].c]=1;return c;})();
+
+function doSuggest(t){
+  var si=document.getElementById("sI");
+  si.value=t;si.dispatchEvent(new Event("input"));
+  document.getElementById("srchSuggest").classList.remove("sh");
+  si.focus();
+}
+
+// Search suggestion show/hide
+(function(){
+  var si=document.getElementById("sI");
+  var sg=document.getElementById("srchSuggest");
+  si.addEventListener("focus",function(){if(!si.value.trim())sg.classList.add("sh");});
+  si.addEventListener("input",function(){sg.classList.toggle("sh",!si.value.trim()&&document.activeElement===si);});
+  document.addEventListener("click",function(e){if(!sg.contains(e.target)&&e.target!==si)sg.classList.remove("sh");});
+})();
+
+// Fly-to-cart animation
+function flyToCart(btn){
+  var r=btn.getBoundingClientRect();
+  var cb=document.querySelector(".cb").getBoundingClientRect();
+  var dot=document.createElement("div");
+  dot.className="fly-dot";
+  dot.style.left=r.left+r.width/2-6+"px";
+  dot.style.top=r.top+r.height/2-6+"px";
+  dot.style.setProperty("--dx",(cb.left+cb.width/2-r.left-r.width/2)+"px");
+  dot.style.setProperty("--dy",(cb.top+cb.height/2-r.top-r.height/2)+"px");
+  document.body.appendChild(dot);
+  setTimeout(function(){dot.remove()},550);
+}
+
+// Enhanced add-to-cart with animation
+var _origAC=null;
 
 init();
 
