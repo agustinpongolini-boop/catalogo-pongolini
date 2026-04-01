@@ -229,6 +229,7 @@ function bCats(){
     var c=keys[j];
     h+='<button class="cc" data-cat="'+esc(c)+'" onclick="sCatF(this)">'+esc(c)+' <span style="opacity:.5;font-size:10px">('+seen[c]+')</span></button>';
   }
+  h+='<a href="custom.html" class="cc" style="text-decoration:none;background:var(--nv);color:var(--gd);font-weight:700">⚙ Custom Guide</a>';
   el.innerHTML=h;
 }
 

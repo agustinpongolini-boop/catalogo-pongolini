@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Custom Valve Guide - Aberaldo Pongolini SRL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--nv:#001860;--nvl:#002a8f;--gd:#d4a843;--gl:#f0d060;--wh:#fff;--g50:#f8f9fa;--g100:#f0f1f3;--g200:#e2e4e8;--g300:#c5c8d0;--g500:#6b7280;--g700:#374151;--g900:#111827;--wa:#25d366;--wad:#1da851;--r:12px;--danger:#ef4444}
+body{font-family:'Montserrat',-apple-system,sans-serif;background:var(--g50);color:var(--g900);-webkit-font-smoothing:antialiased;min-height:100dvh}
+
+.hd{background:linear-gradient(135deg,var(--nv),var(--nvl));color:var(--wh);padding:16px 16px 14px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,24,96,.25)}
+.hd-top{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-img{height:34px;width:auto;opacity:.85}
+.logo-t{display:flex;flex-direction:column}
+.logo-n{font-weight:700;font-size:14px;letter-spacing:.5px}
+.logo-s{font-size:10px;opacity:.7;letter-spacing:1px;text-transform:uppercase}
+.back-btn{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.8);text-decoration:none;font-size:12px;font-weight:600;padding:8px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.25);transition:all .2s}
+.back-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+.back-btn svg{width:16px;height:16px}
+
+.hero{background:linear-gradient(135deg,var(--nv) 0%,#003399 100%);color:var(--wh);padding:32px 20px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,rgba(212,168,67,.15) 0%,transparent 70%);border-radius:50%}
+.hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:200px;height:200px;background:radial-gradient(circle,rgba(212,168,67,.1) 0%,transparent 70%);border-radius:50%}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,168,67,.2);border:1px solid rgba(212,168,67,.4);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;color:var(--gd);margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
+.hero h1{font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.5px;position:relative;z-index:1}
+.hero p{font-size:13px;opacity:.75;max-width:520px;margin:0 auto;line-height:1.6;position:relative;z-index:1}
+
+.main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+.custom-grid{display:grid;grid-template-columns:1fr;gap:24px}
+@media(min-width:768px){.custom-grid{grid-template-columns:1fr 1fr;gap:32px;align-items:start}}
+
+.draw-card{background:var(--wh);border-radius:var(--r);border:1px solid var(--g200);box-shadow:0 2px 12px rgba(0,24,96,.06);overflow:hidden;position:sticky;top:100px}
+.draw-title{background:var(--g50);padding:14px 18px;font-size:13px;font-weight:700;color:var(--nv);border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.5px}
+.draw-title svg{width:18px;height:18px;color:var(--gd)}
+.draw-body{padding:20px;display:flex;align-items:center;justify-content:center}
+.draw-body svg{width:100%;max-width:420px;height:auto}
+
+.form-card{background:var(--wh);border-radius:var(--r);border:1px solid var(--g200);box-shadow:0 2px 12px rgba(0,24,96,.06);overflow:hidden}
+.form-title{background:var(--g50);padding:14px 18px;font-size:13px;font-weight:700;color:var(--nv);border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.5px}
+.form-title svg{width:18px;height:18px;color:var(--gd)}
+.form-body{padding:20px}
+
+.fg{margin-bottom:18px}
+.fg-label{display:block;font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.fg-label .req{color:var(--danger);margin-left:2px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+.fg-input{width:100%;padding:10px 14px;border:1.5px solid var(--g200);border-radius:8px;font-size:14px;font-family:'JetBrains Mono','Montserrat',monospace;font-weight:500;color:var(--g900);outline:none;transition:all .2s;background:var(--g50)}
+.fg-input:focus{border-color:var(--nv);background:var(--wh);box-shadow:0 0 0 3px rgba(0,24,96,.08)}
+.fg-input::placeholder{color:var(--g300);font-weight:400;font-family:'Montserrat',sans-serif;font-size:12px}
+.fg-unit{font-size:10px;color:var(--g500);margin-top:3px;font-weight:500}
+.fg-conv{font-size:10px;color:var(--nv);margin-top:2px;font-weight:600;min-height:14px;font-family:'JetBrains Mono',monospace}
+
+.unit-toggle{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px}
+.unit-toggle-label{font-size:11px;font-weight:600;color:var(--g700)}
+.unit-switch{position:relative;width:44px;height:24px;background:var(--g300);border-radius:12px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.unit-switch.active{background:var(--nv)}
+.unit-switch-dot{position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--wh);border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.unit-switch.active .unit-switch-dot{transform:translateX(20px)}
+.unit-mode{font-size:12px;font-weight:700;color:var(--nv);min-width:55px;font-family:'JetBrains Mono',monospace}
+
+.rg{display:flex;flex-wrap:wrap;gap:8px}
+.rg-opt{position:relative}
+.rg-opt input{position:absolute;opacity:0;width:0;height:0}
+.rg-opt label{display:block;padding:8px 16px;border:1.5px solid var(--g200);border-radius:8px;font-size:12px;font-weight:600;color:var(--g700);cursor:pointer;transition:all .15s;background:var(--g50);text-align:center;white-space:nowrap}
+.rg-opt input:checked+label{border-color:var(--nv);background:#e8f0fe;color:var(--nv)}
+.rg-opt label:hover{border-color:var(--g300)}
+
+.shapes{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px}
+.shape-opt{position:relative}
+.shape-opt input{position:absolute;opacity:0;width:0;height:0}
+.shape-opt label{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border:1.5px solid var(--g200);border-radius:8px;cursor:pointer;transition:all .15s;background:var(--g50)}
+.shape-opt input:checked+label{border-color:var(--nv);background:#e8f0fe}
+.shape-opt label:hover{border-color:var(--g300)}
+.shape-opt label svg{width:44px;height:44px}
+.shape-opt label span{font-size:9px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.3px}
+.shape-opt input:checked+label span{color:var(--nv)}
+
+.fg-textarea{width:100%;padding:10px 14px;border:1.5px solid var(--g200);border-radius:8px;font-size:13px;font-family:'Montserrat',sans-serif;color:var(--g900);outline:none;transition:all .2s;background:var(--g50);resize:vertical;min-height:80px}
+.fg-textarea:focus{border-color:var(--nv);background:var(--wh);box-shadow:0 0 0 3px rgba(0,24,96,.08)}
+
+.divider{height:1px;background:var(--g200);margin:24px 0}
+
+.submit-area{margin-top:24px}
+.wa-sel{display:flex;gap:8px;margin-bottom:14px}
+.wa-o{flex:1;padding:10px 8px;border:2px solid var(--g200);border-radius:10px;background:var(--wh);cursor:pointer;text-align:center;font-family:inherit;transition:all .2s}
+.wa-o.sel{border-color:var(--wa);background:#f0fdf4}
+.wa-ol{font-size:11px;font-weight:600;color:var(--g700)}
+.wa-on{font-size:9px;color:var(--g500);margin-top:2px}
+.wa-btn{width:100%;padding:14px;background:var(--wa);color:var(--wh);border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s}
+.wa-btn:hover{background:var(--wad)}
+.wa-btn svg{width:22px;height:22px}
+
+.preview{background:var(--g50);border:1.5px dashed var(--g200);border-radius:10px;padding:14px;margin-top:20px;display:none}
+.preview.show{display:block}
+.preview-title{font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.preview-item{font-size:12px;color:var(--g700)}
+.preview-item strong{color:var(--nv)}
+
+.dim-line{stroke:var(--danger);stroke-width:1.2;stroke-dasharray:4 2}
+.dim-arrow{fill:var(--danger)}
+.dim-text{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;fill:var(--danger)}
+.part-label{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;fill:var(--nv);text-transform:uppercase;letter-spacing:.5px}
+.guide-body{fill:#d1d5db;stroke:#374151;stroke-width:1.5}
+.guide-inner{fill:#f8f9fa;stroke:#6b7280;stroke-width:1;stroke-dasharray:3 2}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.draw-card,.form-card{animation:fadeUp .5s ease forwards}
+.form-card{animation-delay:.15s}
+
+@media(max-width:767px){
+  .draw-card{position:static}
+  .hero h1{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-top">
+    <div class="logo">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTA4IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEwOCI+CiAgPGVsbGlwc2UgY3g9IjkwIiBjeT0iNTQiIHJ4PSI4NSIgcnk9IjUwIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMuNSIvPgogIDx0ZXh0IHg9IjkwIiB5PSI3MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IidBcmlhbCBCbGFjaycsJ0ltcGFjdCcsc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSI0NCIgZmlsbD0id2hpdGUiIGxldHRlci1zcGFjaW5nPSItMS41IiBmb250LXN0cmV0Y2g9ImNvbmRlbnNlZCI+MzAwLUlORFk8L3RleHQ+Cjwvc3ZnPgo=" class="logo-img" alt="300-INDY">
+      <div class="logo-t"><span class="logo-n">Aberaldo Pongolini SRL</span><span class="logo-s">Custom Valve Guide</span></div>
+    </div>
+    <a href="https://pongolini.netlify.app/" class="back-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Catalog
+    </a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-badge">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.384-3.028A1 1 0 015 11.264V7.132a1 1 0 01.554-.894l5.384-3.028a1 1 0 01.98 0l5.384 3.028A1 1 0 0118 7.132v4.132a1 1 0 01-.554.894l-5.384 3.028a1 1 0 01-.98 0z"/></svg>
+    Custom Manufacturing
+  </div>
+  <h1>Custom Valve Guide</h1>
+  <p>Fill in the technical specifications below and we'll send you a quote. We manufacture in cast iron, bronze, and high phosphorus cast iron.</p>
+</div>
+
+<div class="main">
+  <div class="custom-grid">
+
+    <!-- LEFT: Technical Drawing -->
+    <div class="draw-card">
+      <div class="draw-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
+        Reference Drawing
+      </div>
+      <div class="draw-body">
+        <svg viewBox="0 0 420 520" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f0f1f3" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="420" height="520" fill="white"/>
+          <rect width="420" height="520" fill="url(#grid)"/>
+
+          <text x="210" y="30" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="14" font-weight="800" fill="#001860" letter-spacing="1">VALVE GUIDE</text>
+          <text x="210" y="48" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="10" fill="#6b7280">Cross-section view</text>
+
+          <!-- Guide body -->
+          <rect x="145" y="80" width="130" height="340" rx="2" class="guide-body"/>
+          <rect x="180" y="80" width="60" height="340" rx="1" class="guide-inner"/>
+          <!-- Shoulder -->
+          <rect x="135" y="80" width="150" height="40" rx="2" fill="#bfc5ce" stroke="#374151" stroke-width="1.5"/>
+          <rect x="180" y="80" width="60" height="40" rx="1" class="guide-inner"/>
+
+          <!-- Hatching left -->
+          <g opacity="0.15" stroke="#374151" stroke-width="0.5">
+            <line x1="148" y1="125" x2="177" y2="154"/><line x1="148" y1="145" x2="177" y2="174"/>
+            <line x1="148" y1="165" x2="177" y2="194"/><line x1="148" y1="185" x2="177" y2="214"/>
+            <line x1="148" y1="205" x2="177" y2="234"/><line x1="148" y1="225" x2="177" y2="254"/>
+            <line x1="148" y1="245" x2="177" y2="274"/><line x1="148" y1="265" x2="177" y2="294"/>
+            <line x1="148" y1="285" x2="177" y2="314"/><line x1="148" y1="305" x2="177" y2="334"/>
+            <line x1="148" y1="325" x2="177" y2="354"/><line x1="148" y1="345" x2="177" y2="374"/>
+            <line x1="148" y1="365" x2="177" y2="394"/><line x1="148" y1="385" x2="177" y2="414"/>
+          </g>
+          <!-- Hatching right -->
+          <g opacity="0.15" stroke="#374151" stroke-width="0.5">
+            <line x1="243" y1="125" x2="272" y2="154"/><line x1="243" y1="145" x2="272" y2="174"/>
+            <line x1="243" y1="165" x2="272" y2="194"/><line x1="243" y1="185" x2="272" y2="214"/>
+            <line x1="243" y1="205" x2="272" y2="234"/><line x1="243" y1="225" x2="272" y2="254"/>
+            <line x1="243" y1="245" x2="272" y2="274"/><line x1="243" y1="265" x2="272" y2="294"/>
+            <line x1="243" y1="285" x2="272" y2="314"/><line x1="243" y1="305" x2="272" y2="334"/>
+            <line x1="243" y1="325" x2="272" y2="354"/><line x1="243" y1="345" x2="272" y2="374"/>
+            <line x1="243" y1="365" x2="272" y2="394"/><line x1="243" y1="385" x2="272" y2="414"/>
+          </g>
+          <!-- Hatching shoulder -->
+          <g opacity="0.15" stroke="#374151" stroke-width="0.5">
+            <line x1="138" y1="83" x2="177" y2="117"/><line x1="138" y1="95" x2="167" y2="117"/>
+            <line x1="243" y1="83" x2="282" y2="117"/><line x1="253" y1="83" x2="282" y2="107"/>
+          </g>
+
+          <!-- Center line -->
+          <line x1="210" y1="70" x2="210" y2="430" stroke="#001860" stroke-width="0.7" stroke-dasharray="8 3 2 3" opacity="0.4"/>
+
+          <!-- DIM: O.D. -->
+          <line x1="135" y1="65" x2="135" y2="76" class="dim-line"/>
+          <line x1="285" y1="65" x2="285" y2="76" class="dim-line"/>
+          <line x1="135" y1="70" x2="285" y2="70" class="dim-line"/>
+          <polygon points="135,70 141,67 141,73" class="dim-arrow"/>
+          <polygon points="285,70 279,67 279,73" class="dim-arrow"/>
+          <rect x="175" y="58" width="70" height="18" rx="3" fill="white" stroke="#ef4444" stroke-width="1"/>
+          <text x="210" y="71" text-anchor="middle" class="dim-text">Ø O.D.</text>
+
+          <!-- DIM: I.D. -->
+          <line x1="180" y1="440" x2="180" y2="458" class="dim-line"/>
+          <line x1="240" y1="440" x2="240" y2="458" class="dim-line"/>
+          <line x1="180" y1="450" x2="240" y2="450" class="dim-line"/>
+          <polygon points="180,450 186,447 186,453" class="dim-arrow"/>
+          <polygon points="240,450 234,447 234,453" class="dim-arrow"/>
+          <rect x="190" y="438" width="40" height="18" rx="3" fill="white" stroke="#ef4444" stroke-width="1"/>
+          <text x="210" y="451" text-anchor="middle" class="dim-text">Ø I.D.</text>
+
+          <!-- DIM: Length -->
+          <line x1="300" y1="80" x2="330" y2="80" class="dim-line"/>
+          <line x1="300" y1="420" x2="330" y2="420" class="dim-line"/>
+          <line x1="320" y1="80" x2="320" y2="420" class="dim-line"/>
+          <polygon points="320,80 317,86 323,86" class="dim-arrow"/>
+          <polygon points="320,420 317,414 323,414" class="dim-arrow"/>
+          <rect x="299" y="235" width="60" height="30" rx="3" fill="white" stroke="#ef4444" stroke-width="1"/>
+          <text x="329" y="248" text-anchor="middle" class="dim-text">L</text>
+          <text x="329" y="260" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="8" fill="#ef4444">(length)</text>
+
+          <!-- DIM: Step -->
+          <line x1="90" y1="80" x2="130" y2="80" class="dim-line"/>
+          <line x1="90" y1="120" x2="130" y2="120" class="dim-line"/>
+          <line x1="105" y1="80" x2="105" y2="120" class="dim-line"/>
+          <polygon points="105,80 102,86 108,86" class="dim-arrow"/>
+          <polygon points="105,120 102,114 108,114" class="dim-arrow"/>
+          <text x="105" y="140" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="8" font-weight="700" fill="#ef4444">STEP</text>
+          <text x="105" y="150" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="7" fill="#ef4444">(shoulder)</text>
+
+          <!-- Labels -->
+          <line x1="260" y1="250" x2="340" y2="220" stroke="#001860" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="260" cy="250" r="2" fill="#001860" opacity="0.5"/>
+          <text x="345" y="218" class="part-label">Material</text>
+          <text x="345" y="230" font-family="'Montserrat',sans-serif" font-size="8" fill="#6b7280">FG / Bronze / Hi-P</text>
+
+          <line x1="210" y1="300" x2="340" y2="330" stroke="#001860" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="210" cy="300" r="2" fill="#001860" opacity="0.5"/>
+          <text x="345" y="328" class="part-label">Inner Diameter</text>
+          <text x="345" y="340" font-family="'Montserrat',sans-serif" font-size="8" fill="#6b7280">Stem bore</text>
+
+          <line x1="150" y1="100" x2="60" y2="180" stroke="#001860" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="150" cy="100" r="2" fill="#001860" opacity="0.5"/>
+          <text x="20" y="185" class="part-label">Shoulder / Step</text>
+          <text x="20" y="197" font-family="'Montserrat',sans-serif" font-size="8" fill="#6b7280">Optional per shape</text>
+
+          <rect x="145" y="200" width="5" height="20" rx="1" fill="#001860" opacity="0.2"/>
+          <rect x="270" y="200" width="5" height="20" rx="1" fill="#001860" opacity="0.2"/>
+          <line x1="270" y1="210" x2="340" y2="270" stroke="#001860" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="270" cy="210" r="2" fill="#001860" opacity="0.5"/>
+          <text x="345" y="268" class="part-label">Oil Groove</text>
+          <text x="345" y="280" font-family="'Montserrat',sans-serif" font-size="8" fill="#6b7280">Optional</text>
+
+          <text x="210" y="490" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="9" fill="#6b7280">All dimensions in mm &amp; inches</text>
+          <text x="210" y="505" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="9" fill="#6b7280">Tolerances upon request</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- RIGHT: Form -->
+    <div class="form-card">
+      <div class="form-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        Technical Specifications
+      </div>
+      <div class="form-body">
+
+        <!-- UNIT TOGGLE -->
+        <div class="unit-toggle">
+          <span class="unit-toggle-label">Input units:</span>
+          <div class="unit-switch" id="unitSwitch" onclick="toggleUnits()">
+            <div class="unit-switch-dot"></div>
+          </div>
+          <span class="unit-mode" id="unitLabel">mm</span>
+        </div>
+
+        <!-- MATERIAL -->
+        <div class="fg">
+          <label class="fg-label">Material <span class="req">*</span></label>
+          <div class="rg">
+            <div class="rg-opt"><input type="radio" name="mat" id="mat_fg" value="Cast Iron (FG)" checked><label for="mat_fg">Cast Iron (FG)</label></div>
+            <div class="rg-opt"><input type="radio" name="mat" id="mat_b" value="Bronze (B)"><label for="mat_b">Bronze (B)</label></div>
+            <div class="rg-opt"><input type="radio" name="mat" id="mat_hp" value="High Phosphorus Cast Iron (Hi-P)"><label for="mat_hp">Hi-Phosphorus (Hi-P)</label></div>
+          </div>
+        </div>
+
+        <!-- DIMENSIONS -->
+        <div class="fg">
+          <label class="fg-label">Main Dimensions <span class="req">*</span></label>
+          <div class="fg-row-3">
+            <div>
+              <input type="number" step="0.001" class="fg-input" id="dim_od" placeholder="e.g. 15.05" oninput="onDimInput()">
+              <div class="fg-unit">Ø O.D. (<span class="unit-disp">mm</span>)</div>
+              <div class="fg-conv" id="conv_od"></div>
+            </div>
+            <div>
+              <input type="number" step="0.001" class="fg-input" id="dim_id" placeholder="e.g. 8.02" oninput="onDimInput()">
+              <div class="fg-unit">Ø I.D. (<span class="unit-disp">mm</span>)</div>
+              <div class="fg-conv" id="conv_id"></div>
+            </div>
+            <div>
+              <input type="number" step="0.001" class="fg-input" id="dim_l" placeholder="e.g. 46.5" oninput="onDimInput()">
+              <div class="fg-unit">L - Length (<span class="unit-disp">mm</span>)</div>
+              <div class="fg-conv" id="conv_l"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SHAPE -->
+        <div class="fg">
+          <label class="fg-label">Shape / Profile</label>
+          <div class="shapes">
+            <div class="shape-opt">
+              <input type="radio" name="forma" id="f_a" value="A - Straight plain" checked>
+              <label for="f_a">
+                <svg viewBox="0 0 44 44"><rect x="12" y="2" width="20" height="40" rx="1" fill="#d1d5db" stroke="#374151" stroke-width="1.2"/><rect x="17" y="2" width="10" height="40" rx="0.5" fill="#f8f9fa" stroke="#6b7280" stroke-width="0.8" stroke-dasharray="2 1"/></svg>
+                <span>A - Plain</span>
+              </label>
+            </div>
+            <div class="shape-opt">
+              <input type="radio" name="forma" id="f_f" value="F - Shouldered">
+              <label for="f_f">
+                <svg viewBox="0 0 44 44"><rect x="8" y="2" width="28" height="8" rx="1" fill="#bfc5ce" stroke="#374151" stroke-width="1.2"/><rect x="12" y="10" width="20" height="32" rx="1" fill="#d1d5db" stroke="#374151" stroke-width="1.2"/><rect x="17" y="2" width="10" height="40" rx="0.5" fill="#f8f9fa" stroke="#6b7280" stroke-width="0.8" stroke-dasharray="2 1"/></svg>
+                <span>F - Shoulder</span>
+              </label>
+            </div>
+            <div class="shape-opt">
+              <input type="radio" name="forma" id="f_g" value="G - Stepped">
+              <label for="f_g">
+                <svg viewBox="0 0 44 44"><rect x="12" y="2" width="20" height="40" rx="1" fill="#d1d5db" stroke="#374151" stroke-width="1.2"/><rect x="8" y="14" width="28" height="6" rx="1" fill="#bfc5ce" stroke="#374151" stroke-width="1.2"/><rect x="17" y="2" width="10" height="40" rx="0.5" fill="#f8f9fa" stroke="#6b7280" stroke-width="0.8" stroke-dasharray="2 1"/></svg>
+                <span>G - Step</span>
+              </label>
+            </div>
+            <div class="shape-opt">
+              <input type="radio" name="forma" id="f_b" value="B - Closed end (blind)">
+              <label for="f_b">
+                <svg viewBox="0 0 44 44"><rect x="12" y="2" width="20" height="40" rx="1" fill="#d1d5db" stroke="#374151" stroke-width="1.2"/><rect x="17" y="2" width="10" height="34" rx="0.5" fill="#f8f9fa" stroke="#6b7280" stroke-width="0.8" stroke-dasharray="2 1"/><rect x="12" y="38" width="20" height="4" rx="1" fill="#aab0b9" stroke="#374151" stroke-width="1.2"/></svg>
+                <span>B - Blind</span>
+              </label>
+            </div>
+            <div class="shape-opt">
+              <input type="radio" name="forma" id="f_o" value="Other (specify in notes)">
+              <label for="f_o">
+                <svg viewBox="0 0 44 44"><text x="22" y="28" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="20" fill="#6b7280">?</text></svg>
+                <span>Other</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- SHOULDER -->
+        <div class="fg">
+          <label class="fg-label">Shoulder / Step (if applicable)</label>
+          <div class="fg-row">
+            <div>
+              <input type="number" step="0.001" class="fg-input" id="dim_sh_od" placeholder="e.g. 17.5" oninput="onDimInput()">
+              <div class="fg-unit">Ø Shoulder (<span class="unit-disp">mm</span>)</div>
+              <div class="fg-conv" id="conv_sh_od"></div>
+            </div>
+            <div>
+              <input type="number" step="0.001" class="fg-input" id="dim_sh_h" placeholder="e.g. 3.5" oninput="onDimInput()">
+              <div class="fg-unit">Step height (<span class="unit-disp">mm</span>)</div>
+              <div class="fg-conv" id="conv_sh_h"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OIL GROOVE -->
+        <div class="fg">
+          <label class="fg-label">Oil Groove</label>
+          <div class="rg">
+            <div class="rg-opt"><input type="radio" name="groove" id="gr_no" value="No groove" checked><label for="gr_no">No groove</label></div>
+            <div class="rg-opt"><input type="radio" name="groove" id="gr_yes" value="With groove"><label for="gr_yes">With groove</label></div>
+            <div class="rg-opt"><input type="radio" name="groove" id="gr_spec" value="Special (see notes)"><label for="gr_spec">Special</label></div>
+          </div>
+        </div>
+
+        <!-- HARDNESS -->
+        <div class="fg">
+          <label class="fg-label">Required Hardness</label>
+          <div class="rg">
+            <div class="rg-opt"><input type="radio" name="hard" id="h_std" value="Standard (190-220 HB)" checked><label for="h_std">Standard (190-220 HB)</label></div>
+            <div class="rg-opt"><input type="radio" name="hard" id="h_temp" value="Hardened (250-280 HB)"><label for="h_temp">Hardened (250-280 HB)</label></div>
+            <div class="rg-opt"><input type="radio" name="hard" id="h_other" value="Other (specify)"><label for="h_other">Other</label></div>
+          </div>
+        </div>
+
+        <!-- APPLICATION -->
+        <div class="fg">
+          <label class="fg-label">Application / Engine</label>
+          <input type="text" class="fg-input" id="app_motor" placeholder="e.g. Cummins 6BT 5.9, Deutz 913, Toyota Hilux 2.8..." style="font-family:'Montserrat',sans-serif">
+        </div>
+
+        <!-- OEM -->
+        <div class="fg">
+          <label class="fg-label">OEM Code / Reference (if available)</label>
+          <input type="text" class="fg-input" id="oem_code" placeholder="e.g. 352 053 0729, MAHLE GC0700080..." style="font-family:'Montserrat',sans-serif">
+        </div>
+
+        <!-- QUANTITY -->
+        <div class="fg">
+          <label class="fg-label">Quantity <span class="req">*</span></label>
+          <div class="fg-row">
+            <div>
+              <input type="number" class="fg-input" id="qty" placeholder="e.g. 100" oninput="onDimInput()">
+              <div class="fg-unit">Units</div>
+            </div>
+            <div>
+              <select class="fg-input" id="qty_freq" style="font-family:'Montserrat',sans-serif;font-size:13px">
+                <option value="One-time order">One-time order</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Yearly">Yearly</option>
+              </select>
+              <div class="fg-unit">Frequency</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="fg">
+          <label class="fg-label">Additional Notes</label>
+          <textarea class="fg-textarea" id="notes" placeholder="Extra details, special tolerances, surface finish, attached drawing..."></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- CONTACT -->
+        <div class="fg">
+          <label class="fg-label">Contact Information <span class="req">*</span></label>
+          <div class="fg-row" style="margin-bottom:10px">
+            <input type="text" class="fg-input" id="contact_name" placeholder="Name / Company" style="font-family:'Montserrat',sans-serif">
+            <input type="text" class="fg-input" id="contact_country" placeholder="Country" style="font-family:'Montserrat',sans-serif">
+          </div>
+          <input type="email" class="fg-input" id="contact_email" placeholder="Email address" style="font-family:'Montserrat',sans-serif">
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="preview" id="preview">
+          <div class="preview-title">📋 Order Summary</div>
+          <div class="preview-grid" id="previewGrid"></div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="submit-area">
+          <div class="wa-sel">
+            <button class="wa-o sel" onclick="selWA('n')" id="waN"><div class="wa-ol">Domestic Market</div><div class="wa-on">+54 9 3492 528333</div></button>
+            <button class="wa-o" onclick="selWA('e')" id="waE"><div class="wa-ol">Export / Intl.</div><div class="wa-on">+54 9 3492 687096</div></button>
+          </div>
+          <button class="wa-btn" onclick="sendWhatsApp()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Send Request via WhatsApp
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var selLine='n';
+var WN={n:'5493492528333',e:'5493492687096'};
+var useInches=false;
+var MM_TO_INCH=0.0393701;
+var INCH_TO_MM=25.4;
+
+function selWA(t){
+  selLine=t;
+  document.getElementById('waN').classList.toggle('sel',t==='n');
+  document.getElementById('waE').classList.toggle('sel',t==='e');
+}
+
+function toggleUnits(){
+  useInches=!useInches;
+  document.getElementById('unitSwitch').classList.toggle('active',useInches);
+  document.getElementById('unitLabel').textContent=useInches?'inches':'mm';
+  document.querySelectorAll('.unit-disp').forEach(function(el){el.textContent=useInches?'in':'mm';});
+  var fields=[
+    {id:'dim_od',mm:'e.g. 15.05',in:'e.g. 0.5925'},
+    {id:'dim_id',mm:'e.g. 8.02',in:'e.g. 0.3157'},
+    {id:'dim_l',mm:'e.g. 46.5',in:'e.g. 1.8307'},
+    {id:'dim_sh_od',mm:'e.g. 17.5',in:'e.g. 0.6890'},
+    {id:'dim_sh_h',mm:'e.g. 3.5',in:'e.g. 0.1378'}
+  ];
+  for(var i=0;i<fields.length;i++){
+    var el=document.getElementById(fields[i].id);
+    if(el) el.placeholder=useInches?fields[i].in:fields[i].mm;
+  }
+  onDimInput();
+}
+
+function convertField(inputId,convId){
+  var el=document.getElementById(inputId);
+  var conv=document.getElementById(convId);
+  if(!el||!conv)return;
+  var v=parseFloat(el.value);
+  if(isNaN(v)||v===0){conv.textContent='';return;}
+  if(useInches){
+    conv.textContent='= '+(v*INCH_TO_MM).toFixed(2)+' mm';
+  } else {
+    conv.textContent='= '+(v*MM_TO_INCH).toFixed(4)+'"';
+  }
+}
+
+function onDimInput(){
+  convertField('dim_od','conv_od');
+  convertField('dim_id','conv_id');
+  convertField('dim_l','conv_l');
+  convertField('dim_sh_od','conv_sh_od');
+  convertField('dim_sh_h','conv_sh_h');
+  updatePreview();
+}
+
+function getRadio(name){var r=document.querySelector('input[name="'+name+'"]:checked');return r?r.value:'';}
+function val(id){return(document.getElementById(id).value||'').trim();}
+
+function getDimMM(id){
+  var v=parseFloat(val(id));
+  if(isNaN(v))return null;
+  return useInches?v*INCH_TO_MM:v;
+}
+
+function fmtBoth(mm){return mm.toFixed(2)+' mm / '+(mm*MM_TO_INCH).toFixed(4)+'"';}
+
+function updatePreview(){
+  var od=getDimMM('dim_od'),id2=getDimMM('dim_id'),l=getDimMM('dim_l'),qty=val('qty');
+  var prev=document.getElementById('preview');
+  var grid=document.getElementById('previewGrid');
+  if(od||id2||l||qty){
+    prev.classList.add('show');
+    var h='';
+    if(od) h+='<div class="preview-item">Ø O.D.: <strong>'+fmtBoth(od)+'</strong></div>';
+    if(id2) h+='<div class="preview-item">Ø I.D.: <strong>'+fmtBoth(id2)+'</strong></div>';
+    if(l) h+='<div class="preview-item">Length: <strong>'+fmtBoth(l)+'</strong></div>';
+    h+='<div class="preview-item">Material: <strong>'+getRadio('mat').split('(')[0].trim()+'</strong></div>';
+    h+='<div class="preview-item">Shape: <strong>'+getRadio('forma').split('-')[0].trim()+'</strong></div>';
+    if(qty) h+='<div class="preview-item">Qty: <strong>'+qty+' pcs</strong></div>';
+    grid.innerHTML=h;
+  } else {
+    prev.classList.remove('show');
+  }
+}
+
+function sendWhatsApp(){
+  var od=getDimMM('dim_od'),id2=getDimMM('dim_id'),l=getDimMM('dim_l');
+  if(!od||!id2||!l){alert('Please fill in the main dimensions: O.D., I.D. and Length.');return;}
+
+  var m="🔧 *CUSTOM VALVE GUIDE REQUEST*\n";
+  m+="━━━━━━━━━━━━━━━━━\n";
+  m+="📐 *Pongolini Catalog 2026*\n\n";
+  m+="*DIMENSIONS:*\n";
+  m+="• Ø O.D.: "+fmtBoth(od)+"\n";
+  m+="• Ø I.D.: "+fmtBoth(id2)+"\n";
+  m+="• Length: "+fmtBoth(l)+"\n";
+
+  var sh_od=getDimMM('dim_sh_od'),sh_h=getDimMM('dim_sh_h');
+  if(sh_od||sh_h){
+    if(sh_od) m+="• Ø Shoulder: "+fmtBoth(sh_od)+"\n";
+    if(sh_h) m+="• Step height: "+fmtBoth(sh_h)+"\n";
+  }
+
+  m+="\n*SPECIFICATIONS:*\n";
+  m+="• Material: "+getRadio('mat')+"\n";
+  m+="• Shape: "+getRadio('forma')+"\n";
+  m+="• Oil Groove: "+getRadio('groove')+"\n";
+  m+="• Hardness: "+getRadio('hard')+"\n";
+
+  var app=val('app_motor');
+  if(app) m+="• Engine/Application: "+app+"\n";
+  var oem=val('oem_code');
+  if(oem) m+="• OEM/Ref: "+oem+"\n";
+
+  var qty=val('qty'),freq=document.getElementById('qty_freq').value;
+  if(qty) m+="\n*QUANTITY:* "+qty+" units ("+freq+")\n";
+
+  var notes=val('notes');
+  if(notes) m+="\n*NOTES:* "+notes+"\n";
+
+  var name=val('contact_name'),country=val('contact_country'),email=val('contact_email');
+  if(name||country||email){
+    m+="\n*CONTACT:*\n";
+    if(name) m+="• "+name+"\n";
+    if(country) m+="• Country: "+country+"\n";
+    if(email) m+="• Email: "+email+"\n";
+  }
+
+  m+="\n━━━━━━━━━━━━━━━━━\n";
+  m+="📲 _Sent from Pongolini Digital Catalog_";
+
+  window.open("https://wa.me/"+WN[selLine]+"?text="+encodeURIComponent(m),"_blank");
+}
+</script>
+</body>
+</html>
