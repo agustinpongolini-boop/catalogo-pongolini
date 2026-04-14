@@ -19,6 +19,13 @@ body{font-family:'Montserrat',-apple-system,sans-serif;background:var(--g50);col
 .logo-s{font-size:10px;opacity:.7;letter-spacing:1px;text-transform:uppercase}
 .cb{position:relative;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--wh);transition:all .2s}
 .cb:hover{background:rgba(255,255,255,.2)}
+.hd-actions{display:flex;align-items:center;gap:8px}
+.gal-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:linear-gradient(135deg,var(--gd),var(--gl));color:var(--nv);border:none;border-radius:10px;font-size:12px;font-weight:800;font-family:inherit;letter-spacing:.4px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(212,168,67,.35);white-space:nowrap}
+.gal-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(212,168,67,.5)}
+.gal-btn svg{width:16px;height:16px}
+.gal-btn .gal-txt-full{display:inline}
+.gal-btn .gal-txt-short{display:none}
+@media(max-width:480px){.gal-btn{padding:9px 10px;font-size:11px}.gal-btn .gal-txt-full{display:none}.gal-btn .gal-txt-short{display:inline}}
 .cb svg{width:22px;height:22px}
 .cbg{position:absolute;top:-4px;right:-4px;background:var(--gd);color:var(--nv);font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:none;align-items:center;justify-content:center}
 .cbg.sh{display:flex}
@@ -190,10 +197,17 @@ mark{background:var(--gl);color:var(--nv);padding:0 2px;border-radius:2px}
       <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTA4IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEwOCI+CiAgPGVsbGlwc2UgY3g9IjkwIiBjeT0iNTQiIHJ4PSI4NSIgcnk9IjUwIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMuNSIvPgogIDx0ZXh0IHg9IjkwIiB5PSI3MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IidBcmlhbCBCbGFjaycsJ0ltcGFjdCcsc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSI0NCIgZmlsbD0id2hpdGUiIGxldHRlci1zcGFjaW5nPSItMS41IiBmb250LXN0cmV0Y2g9ImNvbmRlbnNlZCI+MzAwLUlORFk8L3RleHQ+Cjwvc3ZnPgo=" class="logo-img" alt="300-INDY">
       <div class="logo-t"><span class="logo-n">Aberaldo Pongolini SRL</span><span class="logo-s">Cat&aacute;logo 2026</span></div>
     </div>
-    <button class="cb" onclick="tCart()" aria-label="Ver pedido">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 5.2a1 1 0 00.9 1.3h12.8M10 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
-      <span class="cbg" id="cBdg">0</span>
-    </button>
+    <div class="hd-actions">
+      <a href="productos_300indy_galeria.html" class="gal-btn" aria-label="Ver galer&iacute;a de productos 300-INDY">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/><circle cx="7" cy="6" r="1.2" fill="currentColor"/><circle cx="7" cy="12" r="1.2" fill="currentColor"/><circle cx="7" cy="18" r="1.2" fill="currentColor"/></svg>
+        <span class="gal-txt-full">Ver Galer&iacute;a</span>
+        <span class="gal-txt-short">Galer&iacute;a</span>
+      </a>
+      <button class="cb" onclick="tCart()" aria-label="Ver pedido">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 5.2a1 1 0 00.9 1.3h12.8M10 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+        <span class="cbg" id="cBdg">0</span>
+      </button>
+    </div>
   </div>
   <div class="sc">
     <span class="si-ico"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
