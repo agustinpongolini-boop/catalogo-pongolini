@@ -140,6 +140,18 @@ mark{background:var(--gl);color:var(--nv);padding:0 2px;border-radius:2px}
 .xs-spec{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--g100);color:var(--g700)}
 .xs-spec b{color:var(--g900);font-weight:700}
 
+.sm-bar{display:none;gap:6px;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:var(--wh);border-bottom:1px solid var(--g200);align-items:center}
+.sm-bar::-webkit-scrollbar{display:none}
+.sm-bar.sh{display:flex}
+.sm-label{font-size:10px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;margin-right:2px;white-space:nowrap}
+.sm-chip{flex-shrink:0;padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid #7dd3fc;background:#e0f2fe;color:#0369a1;white-space:nowrap;transition:all .2s;font-family:inherit;letter-spacing:.3px}
+.sm-chip:hover{border-color:#0284c7;background:#bae6fd}
+.sm-chip.ac{background:#0369a1;color:var(--wh);border-color:#0369a1;box-shadow:0 2px 8px rgba(3,105,161,.3)}
+.sm-chip.sm-std{border-color:var(--g300);background:var(--g50);color:var(--g700)}
+.sm-chip.sm-std:hover{border-color:var(--g500);background:var(--g100)}
+.sm-chip.sm-std.ac{background:var(--g700);color:var(--wh);border-color:var(--g700);box-shadow:0 2px 8px rgba(55,65,81,.3)}
+.sm-chip .sm-n{opacity:.65;font-weight:500;margin-left:2px}
+
 .logo-img{height:38px;width:auto;opacity:0.85}
 .eq-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.eq-tag{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:600;letter-spacing:.3px;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}.eq-mahle{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}.eq-nubo{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}.eq-label{opacity:.7;font-weight:400;font-size:9px;text-transform:uppercase}.eq-search-hint{font-size:11px;color:rgba(255,255,255,.55);margin-top:4px;text-align:center;padding:0 12px}
 
@@ -266,6 +278,7 @@ mark{background:var(--gl);color:var(--nv);padding:0 2px;border-radius:2px}
 </div>
 <div class="cats" id="cats"></div>
 <div class="dim-bar" id="dimBar"></div>
+<div class="sm-bar" id="smBar"></div>
 <div class="ri" id="rI"></div>
 <div class="pl" id="pL"></div>
 <div class="lm" id="lM" style="display:none"><button class="lm-b" onclick="more()">Cargar m&aacute;s productos</button></div>
@@ -321,10 +334,22 @@ var DIM_CATS={
     {key:"H",label:"Alto (mm)",ph:"ej: 9"}
   ]
 };
+// Oversize (sobremedida) filter: "all" | "STD" | "+X.XX"
+var smFilter="all";
+// Categories where the oversize filter is relevant
+var SM_CATS={"\u00c1rboles de Leva":1,"Gu\u00edas de V\u00e1lvula":1,"Gu\u00edas Motos":1};
+
+function parseSM(desc){
+  if(!desc) return "STD";
+  var m=desc.match(/\+(\d+\.\d+)/);
+  if(!m) return "STD";
+  return "+"+parseFloat(m[1]).toFixed(2);
+}
 
 function init(){
   bCats();
   renderDimBar();
+  renderSMBar();
   fRender();
   document.getElementById("sI").addEventListener("input",deb(function(e){
     sQ=e.target.value.trim();
@@ -358,10 +383,12 @@ function sCatF(el){
   aCat=el.getAttribute("data-cat");
   dC=30;
   dimFilters={};
+  smFilter="all";
   var all=document.querySelectorAll(".cc");
   for(var i=0;i<all.length;i++) all[i].classList.remove("ac");
   el.classList.add("ac");
   renderDimBar();
+  renderSMBar();
   fRender();
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -397,6 +424,36 @@ function clearDims(){
   dimFilters={};
   renderDimBar();
   dC=30;
+  fRender();
+}
+
+function renderSMBar(){
+  var bar=document.getElementById("smBar");
+  if(!SM_CATS[aCat]){bar.innerHTML="";bar.classList.remove("sh");return;}
+  var seen={},stdCount=0;
+  for(var i=0;i<D.length;i++){
+    if(D[i].cat!==aCat) continue;
+    var sm=parseSM(D[i].d);
+    if(sm==="STD") stdCount++;
+    else seen[sm]=(seen[sm]||0)+1;
+  }
+  var keys=Object.keys(seen).sort(function(a,b){return parseFloat(a.substring(1))-parseFloat(b.substring(1));});
+  if(keys.length===0){bar.innerHTML="";bar.classList.remove("sh");return;}
+  var h='<span class="sm-label">Sobremedida:</span>';
+  h+='<button class="sm-chip'+(smFilter==="all"?" ac":"")+'" onclick="setSM(\'all\')">Todas</button>';
+  if(stdCount>0) h+='<button class="sm-chip sm-std'+(smFilter==="STD"?" ac":"")+'" onclick="setSM(\'STD\')">STD<span class="sm-n">('+stdCount+')</span></button>';
+  for(var i=0;i<keys.length;i++){
+    var k=keys[i];
+    h+='<button class="sm-chip'+(smFilter===k?" ac":"")+'" onclick="setSM(\''+k+'\')">'+k+'<span class="sm-n">('+seen[k]+')</span></button>';
+  }
+  bar.innerHTML=h;
+  bar.classList.add("sh");
+}
+
+function setSM(v){
+  smFilter=v;
+  dC=30;
+  renderSMBar();
   fRender();
 }
 
@@ -458,6 +515,14 @@ function fRender(){
       if(ok) dm.push(p);
     }
     r=dm;
+  }
+  // Oversize (sobremedida) filter
+  if(smFilter && smFilter!=="all" && SM_CATS[aCat]){
+    var smf=[];
+    for(var i=0;i<r.length;i++){
+      if(parseSM(r[i].d)===smFilter) smf.push(r[i]);
+    }
+    r=smf;
   }
   fP=r;
   render();
