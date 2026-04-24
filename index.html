@@ -334,10 +334,18 @@ var DIM_CATS={
     {key:"H",label:"Alto (mm)",ph:"ej: 9"}
   ]
 };
-// Oversize (sobremedida) filter: "all" | "STD" | "+X.XX"
+// Oversize (sobremedida) filter: "all" | "STD" | "OTHER" | "+X.XX"
 var smFilter="all";
-// Categories where the oversize filter is relevant
-var SM_CATS={"\u00c1rboles de Leva":1,"Gu\u00edas de V\u00e1lvula":1,"Gu\u00edas Motos":1};
+// Fixed oversizes for guide/seat categories (industry standard)
+var SM_FIXED_CATS={
+  "Gu\u00edas de V\u00e1lvula":["+0.03","+0.05","+0.10","+0.15","+0.20"],
+  "Gu\u00edas Motos":["+0.03","+0.05","+0.10","+0.15","+0.20"],
+  "Asientos de V\u00e1lvula":["+0.03","+0.05","+0.10","+0.15","+0.20"],
+  "Asientos Bronce Al.":["+0.03","+0.05","+0.10","+0.15","+0.20"]
+};
+// Categories with dynamic oversize chips built from data
+var SM_DYNAMIC_CATS={"\u00c1rboles de Leva":1};
+function smCatActive(c){return !!(SM_FIXED_CATS[c]||SM_DYNAMIC_CATS[c]);}
 
 function parseSM(desc){
   if(!desc) return "STD";
@@ -429,7 +437,9 @@ function clearDims(){
 
 function renderSMBar(){
   var bar=document.getElementById("smBar");
-  if(!SM_CATS[aCat]){bar.innerHTML="";bar.classList.remove("sh");return;}
+  var fixed=SM_FIXED_CATS[aCat];
+  var dynamic=SM_DYNAMIC_CATS[aCat];
+  if(!fixed && !dynamic){bar.innerHTML="";bar.classList.remove("sh");return;}
   var seen={},stdCount=0;
   for(var i=0;i<D.length;i++){
     if(D[i].cat!==aCat) continue;
@@ -437,14 +447,29 @@ function renderSMBar(){
     if(sm==="STD") stdCount++;
     else seen[sm]=(seen[sm]||0)+1;
   }
-  var keys=Object.keys(seen).sort(function(a,b){return parseFloat(a.substring(1))-parseFloat(b.substring(1));});
-  if(keys.length===0){bar.innerHTML="";bar.classList.remove("sh");return;}
   var h='<span class="sm-label">Sobremedida:</span>';
   h+='<button class="sm-chip'+(smFilter==="all"?" ac":"")+'" onclick="setSM(\'all\')">Todas</button>';
-  if(stdCount>0) h+='<button class="sm-chip sm-std'+(smFilter==="STD"?" ac":"")+'" onclick="setSM(\'STD\')">STD<span class="sm-n">('+stdCount+')</span></button>';
-  for(var i=0;i<keys.length;i++){
-    var k=keys[i];
-    h+='<button class="sm-chip'+(smFilter===k?" ac":"")+'" onclick="setSM(\''+k+'\')">'+k+'<span class="sm-n">('+seen[k]+')</span></button>';
+  if(fixed){
+    h+='<button class="sm-chip sm-std'+(smFilter==="STD"?" ac":"")+'" onclick="setSM(\'STD\')">STD'+(stdCount>0?'<span class="sm-n">('+stdCount+')</span>':'')+'</button>';
+    for(var i=0;i<fixed.length;i++){
+      var k=fixed[i];
+      var cnt=seen[k]||0;
+      h+='<button class="sm-chip'+(smFilter===k?" ac":"")+'" onclick="setSM(\''+k+'\')">'+k+(cnt>0?'<span class="sm-n">('+cnt+')</span>':'')+'</button>';
+    }
+    var otherTotal=0;
+    var okeys=Object.keys(seen);
+    for(var i=0;i<okeys.length;i++){
+      if(fixed.indexOf(okeys[i])<0) otherTotal+=seen[okeys[i]];
+    }
+    h+='<button class="sm-chip'+(smFilter==="OTHER"?" ac":"")+'" onclick="setSM(\'OTHER\')">Otras'+(otherTotal>0?'<span class="sm-n">('+otherTotal+')</span>':'')+'</button>';
+  } else {
+    var keys=Object.keys(seen).sort(function(a,b){return parseFloat(a.substring(1))-parseFloat(b.substring(1));});
+    if(keys.length===0 && stdCount===0){bar.innerHTML="";bar.classList.remove("sh");return;}
+    if(stdCount>0) h+='<button class="sm-chip sm-std'+(smFilter==="STD"?" ac":"")+'" onclick="setSM(\'STD\')">STD<span class="sm-n">('+stdCount+')</span></button>';
+    for(var i=0;i<keys.length;i++){
+      var k=keys[i];
+      h+='<button class="sm-chip'+(smFilter===k?" ac":"")+'" onclick="setSM(\''+k+'\')">'+k+'<span class="sm-n">('+seen[k]+')</span></button>';
+    }
   }
   bar.innerHTML=h;
   bar.classList.add("sh");
@@ -517,10 +542,16 @@ function fRender(){
     r=dm;
   }
   // Oversize (sobremedida) filter
-  if(smFilter && smFilter!=="all" && SM_CATS[aCat]){
+  if(smFilter && smFilter!=="all" && smCatActive(aCat)){
     var smf=[];
+    var fixed=SM_FIXED_CATS[aCat];
     for(var i=0;i<r.length;i++){
-      if(parseSM(r[i].d)===smFilter) smf.push(r[i]);
+      var psm=parseSM(r[i].d);
+      if(smFilter==="OTHER"){
+        if(fixed && psm!=="STD" && fixed.indexOf(psm)<0) smf.push(r[i]);
+      } else if(psm===smFilter){
+        smf.push(r[i]);
+      }
     }
     r=smf;
   }
