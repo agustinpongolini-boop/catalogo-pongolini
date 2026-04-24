@@ -152,6 +152,26 @@ mark{background:var(--gl);color:var(--nv);padding:0 2px;border-radius:2px}
 .sm-chip.sm-std.ac{background:var(--g700);color:var(--wh);border-color:var(--g700);box-shadow:0 2px 8px rgba(55,65,81,.3)}
 .sm-chip .sm-n{opacity:.65;font-weight:500;margin-left:2px}
 
+.cart-sm{margin-top:10px;padding:10px 12px;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px}
+.cart-sm-title{font-size:10px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.cart-sm-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.cart-sm-chip{padding:5px 11px;border-radius:14px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid #7dd3fc;background:var(--wh);color:#0369a1;font-family:inherit;transition:all .15s;letter-spacing:.2px}
+.cart-sm-chip:hover{border-color:#0284c7;background:#e0f2fe}
+.cart-sm-chip.ac{background:#0369a1;color:var(--wh);border-color:#0369a1}
+.cart-sm-custom{width:100%;padding:8px 10px;border:1.5px solid #7dd3fc;border-radius:8px;font-size:12px;font-family:inherit;margin-bottom:8px;outline:none;background:var(--wh);transition:border-color .15s;font-weight:600;color:var(--g900)}
+.cart-sm-custom:focus{border-color:#0369a1}
+.cart-sm-custom::placeholder{color:var(--g300);font-weight:400}
+.cart-sm-lines{margin-top:4px;margin-bottom:6px}
+.cart-sm-line{display:flex;align-items:center;gap:10px;padding:7px 10px;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:8px;margin-bottom:5px}
+.cart-sm-line .qc{margin:0;flex:1;justify-content:flex-end;gap:10px}
+.cart-sm-line .qb{width:28px;height:28px;font-size:14px;border-width:1.5px}
+.cart-sm-line .qv{font-size:14px;min-width:22px}
+.cart-sm-badge{font-size:11px;font-weight:800;padding:4px 9px;border-radius:6px;background:#0369a1;color:var(--wh);min-width:58px;text-align:center;letter-spacing:.3px}
+.cart-sm-badge.is-std{background:var(--g700)}
+.cart-sm-units{font-size:10px;color:var(--g500);font-weight:600;white-space:nowrap}
+.ci-sm{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:5px;background:#0369a1;color:var(--wh);margin-left:6px;letter-spacing:.3px;vertical-align:middle}
+.ci-sm.is-std{background:var(--g700)}
+
 .logo-img{height:38px;width:auto;opacity:0.85}
 .eq-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.eq-tag{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:600;letter-spacing:.3px;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}.eq-mahle{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}.eq-nubo{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}.eq-label{opacity:.7;font-weight:400;font-size:9px;text-transform:uppercase}.eq-search-hint{font-size:11px;color:rgba(255,255,255,.55);margin-top:4px;text-align:center;padding:0 12px}
 
@@ -346,6 +366,12 @@ var SM_FIXED_CATS={
 // Categories with dynamic oversize chips built from data
 var SM_DYNAMIC_CATS={"\u00c1rboles de Leva":1};
 function smCatActive(c){return !!(SM_FIXED_CATS[c]||SM_DYNAMIC_CATS[c]);}
+// Options shown inside the cart SM picker (always the fixed list for guides/seats)
+var SM_CART_OPTIONS=["STD","+0.03","+0.05","+0.10","+0.15","+0.20"];
+// A category requires an SM selection at cart time when it has a fixed list
+function hasCartSM(cat){return !!SM_FIXED_CATS[cat];}
+// Compound cart key: for SM categories include the chosen SM so distinct SMs stay separate
+function cKey(code,sm){return sm?code+"|"+sm:code;}
 
 function parseSM(desc){
   if(!desc) return "STD";
@@ -577,7 +603,8 @@ function render(){
   var h="";
   for(var i=0;i<sh;i++){
     var p=fP[i];
-    var ic=cart[p.c];
+    var isSMCart=hasCartSM(p.cat);
+    var ic=isSMCart?null:cart[p.c];
     var sp=Object.keys(p.s);
     var safeCode=p.c.replace(/'/g,"\\'");
     var delay=Math.min(i*0.03,0.3);
@@ -611,7 +638,46 @@ function render(){
     }
 
     // Cart controls
-    if(ic){
+    if(isSMCart){
+      // Show existing cart lines for this product (one per SM)
+      var smLines=[];
+      for(var sk in cart){if(cart[sk].c===p.c) smLines.push({k:sk,it:cart[sk]});}
+      if(smLines.length>0){
+        h+='<div class="cart-sm-lines">';
+        for(var li=0;li<smLines.length;li++){
+          var L=smLines[li];
+          var lsc=L.k.replace(/'/g,"\\'");
+          var smLabel=L.it.sm||"STD";
+          var isStd=(smLabel==="STD");
+          h+='<div class="cart-sm-line">';
+          h+='<span class="cart-sm-badge'+(isStd?" is-std":"")+'">'+esc(smLabel)+'</span>';
+          h+='<div class="qc">';
+          h+='<button class="qb" onclick="event.stopPropagation();uC(\''+lsc+'\',-1)">\u2212</button>';
+          h+='<span class="qv">'+L.it.qty+'</span>';
+          h+='<button class="qb" onclick="event.stopPropagation();uC(\''+lsc+'\',1)">+</button>';
+          h+='</div>';
+          if(p.q>0) h+='<span class="cart-sm-units">'+(L.it.qty*p.q)+' u.</span>';
+          h+='</div>';
+        }
+        h+='</div>';
+      }
+      // SM picker
+      h+='<div class="cart-sm">';
+      h+='<div class="cart-sm-title">Eleg\u00ed la sobremedida</div>';
+      h+='<div class="cart-sm-chips">';
+      for(var si=0;si<SM_CART_OPTIONS.length;si++){
+        var smo=SM_CART_OPTIONS[si];
+        h+='<button type="button" class="cart-sm-chip'+(si===0?" ac":"")+'" data-sm="'+smo+'" onclick="event.stopPropagation();pickCartSM(this)">'+smo+'</button>';
+      }
+      h+='<button type="button" class="cart-sm-chip" data-sm="OTHER" onclick="event.stopPropagation();pickCartSM(this)">Otras</button>';
+      h+='</div>';
+      h+='<input type="text" class="cart-sm-custom" placeholder="Ej: +0.25" style="display:none" onclick="event.stopPropagation()">';
+      var btnLabelSM=p.q>0?"Agregar juego ("+p.q+" u.)":"Agregar al pedido";
+      h+='<button class="ab" onclick="event.stopPropagation();addWithSM(\''+safeCode+'\',this)">';
+      h+='<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>';
+      h+=btnLabelSM+'</button>';
+      h+='</div>';
+    } else if(ic){
       h+='<div class="qc">';
       h+='<button class="qb" onclick="event.stopPropagation();uC(\''+safeCode+'\',-1)">\u2212</button>';
       h+='<span class="qv">'+ic.qty+'</span>';
@@ -673,9 +739,12 @@ function getXSell(){
   for(var k in cart) items.push(cart[k]);
   if(items.length===0) return [];
 
-  // Build list of cart item full data
+  // Build deduped list of cart item full data (a product may have multiple SM lines)
   var cartFull=[];
+  var seenCode={};
   for(var i=0;i<items.length;i++){
+    if(seenCode[items[i].c]) continue;
+    seenCode[items[i].c]=1;
     for(var j=0;j<D.length;j++){
       if(D[j].c===items[i].c){cartFull.push(D[j]);break;}
     }
@@ -684,9 +753,9 @@ function getXSell(){
   // For each guia in cart, find matching asientos and vice versa
   var suggestions=[];
   var seen={};
-  // Also track what's already in cart
+  // Also track what's already in cart (by product code, not cart key)
   var inCart={};
-  for(var k in cart) inCart[k]=1;
+  for(var k in cart) inCart[cart[k].c]=1;
 
   for(var i=0;i<cartFull.length;i++){
     var p=cartFull[i];
@@ -720,11 +789,14 @@ function getXSell(){
   return suggestions.slice(0,5);
 }
 
-function aC(c,el){
+function aC(c,el,sm){
   var p=null;
   for(var i=0;i<D.length;i++){if(D[i].c===c){p=D[i];break;}}
   if(!p) return;
-  cart[c]={c:p.c,d:p.d,cat:p.cat,q:p.q,qty:1};
+  sm=sm||"";
+  var key=cKey(c,sm);
+  if(!cart[key]) cart[key]={c:p.c,d:p.d,cat:p.cat,q:p.q,qty:0,sm:sm};
+  cart[key].qty+=1;
   // Micro-animations
   if(el){
     el.classList.add("success");
@@ -739,14 +811,39 @@ function aC(c,el){
   uUI();render();
 }
 
-function uC(c,d){
-  if(!cart[c]) return;
-  cart[c].qty+=d;
-  if(cart[c].qty<=0) delete cart[c];
+function uC(key,d){
+  if(!cart[key]) return;
+  cart[key].qty+=d;
+  if(cart[key].qty<=0) delete cart[key];
   uUI();render();
 }
 
-function rC(c){delete cart[c];uUI();render();rCP()}
+function rC(key){delete cart[key];uUI();render();rCP()}
+
+function pickCartSM(el){
+  var parent=el.parentNode.parentNode;
+  var chips=parent.querySelectorAll(".cart-sm-chip");
+  for(var i=0;i<chips.length;i++) chips[i].classList.remove("ac");
+  el.classList.add("ac");
+  var sm=el.getAttribute("data-sm");
+  var custom=parent.querySelector(".cart-sm-custom");
+  if(sm==="OTHER"){custom.style.display="block";setTimeout(function(){custom.focus();},50);}
+  else{custom.style.display="none";custom.style.borderColor="";}
+}
+
+function addWithSM(code,btn){
+  var container=btn.parentNode;
+  var sel=container.querySelector(".cart-sm-chip.ac");
+  if(!sel) return;
+  var sm=sel.getAttribute("data-sm");
+  if(sm==="OTHER"){
+    var input=container.querySelector(".cart-sm-custom");
+    var v=input.value.trim();
+    if(!v){input.style.borderColor="#ef4444";input.focus();return;}
+    sm=v.charAt(0)==="+"?v:"+"+v;
+  }
+  aC(code,btn,sm);
+}
 
 function uUI(){
   var n=0;
@@ -773,31 +870,33 @@ function tCart(){
 
 function rCP(){
   var c=document.getElementById("cIt");
-  var items=[];
-  for(var k in cart) items.push(cart[k]);
+  var keys=Object.keys(cart);
   var tc=0,tu=0;
-  for(var i=0;i<items.length;i++){
-    tc+=items[i].qty;
-    tu+=items[i].q>0 ? items[i].qty*items[i].q : items[i].qty;
+  for(var i=0;i<keys.length;i++){
+    var it=cart[keys[i]];
+    tc+=it.qty;
+    tu+=it.q>0 ? it.qty*it.q : it.qty;
   }
   document.getElementById("cTC").textContent=tc+" juego"+(tc!==1?"s":"")+" ("+tu+" unidades)";
-  document.getElementById("waB").disabled=items.length===0;
+  document.getElementById("waB").disabled=keys.length===0;
 
-  if(items.length===0){
+  if(keys.length===0){
     c.innerHTML='<div class="c-empty"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 5.2a1 1 0 00.9 1.3h12.8M10 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg><p>Tu pedido est\u00e1 vac\u00edo.<br>Explor\u00e1 el cat\u00e1logo y agreg\u00e1 productos.</p></div>';
     return;
   }
 
   var h="";
-  for(var i=0;i<items.length;i++){
-    var it=items[i];
-    var sc=it.c.replace(/'/g,"\\'");
+  for(var i=0;i<keys.length;i++){
+    var k=keys[i];
+    var it=cart[k];
+    var sk=k.replace(/'/g,"\\'");
     var uInfo=it.q>0?" = "+(it.qty*it.q)+"u":"";
-    h+='<div class="ci"><div class="ci-info"><div class="ci-c">'+esc(it.c)+'</div><div class="ci-d">'+esc(it.d)+'</div></div>';
-    h+='<div class="ci-q"><button onclick="uCI(\''+sc+'\',-1)">\u2212</button>';
+    var smBadge=it.sm?' <span class="ci-sm'+(it.sm==="STD"?" is-std":"")+'">'+esc(it.sm)+'</span>':'';
+    h+='<div class="ci"><div class="ci-info"><div class="ci-c">'+esc(it.c)+smBadge+'</div><div class="ci-d">'+esc(it.d)+'</div></div>';
+    h+='<div class="ci-q"><button onclick="uCI(\''+sk+'\',-1)">\u2212</button>';
     h+='<span>'+it.qty+'<small style="font-size:9px;color:#6b7280">'+uInfo+'</small></span>';
-    h+='<button onclick="uCI(\''+sc+'\',1)">+</button>';
-    h+='<button class="ci-rm" onclick="rC(\''+sc+'\')">\u00d7</button></div></div>';
+    h+='<button onclick="uCI(\''+sk+'\',1)">+</button>';
+    h+='<button class="ci-rm" onclick="rC(\''+sk+'\')">\u00d7</button></div></div>';
   }
 
   // Cross-sell suggestions
@@ -839,14 +938,18 @@ function rCP(){
 }
 
 function xsAdd(c){
-  aC(c);
+  // Cross-sell: add with STD as default SM when applicable
+  var p=null;
+  for(var i=0;i<D.length;i++){if(D[i].c===c){p=D[i];break;}}
+  var sm=(p&&hasCartSM(p.cat))?"STD":"";
+  aC(c,null,sm);
   rCP();
 }
 
-function uCI(c,d){
-  if(!cart[c]) return;
-  cart[c].qty+=d;
-  if(cart[c].qty<=0) delete cart[c];
+function uCI(key,d){
+  if(!cart[key]) return;
+  cart[key].qty+=d;
+  if(cart[key].qty<=0) delete cart[key];
   uUI();rCP();render();
 }
 
@@ -868,6 +971,7 @@ function sendWA(){
     var units=it.q>0 ? it.qty*it.q : it.qty;
     totalU+=units;
     m+=(i+1)+". *"+it.c+"* \u00d7 "+it.qty+" juego"+(it.qty!==1?"s":"")+"\n";
+    if(it.sm) m+="   \ud83d\udccf Sobremedida: *"+it.sm+"*\n";
     if(it.q>0) m+="   ("+units+" unidades)\n";
     m+="   "+it.d+"\n";
     m+="   \ud83d\udcc2 "+it.cat+"\n\n";
