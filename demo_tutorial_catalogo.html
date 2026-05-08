@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo Tutorial — Catálogo 300-INDY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --nv:#001860;--nvl:#002a8f;--gd:#d4a843;--gl:#f0d060;
+  --wh:#fff;--g50:#f8f9fa;--g100:#f0f1f3;--g200:#e2e4e8;--g300:#c5c8d0;
+  --g500:#6b7280;--g700:#374151;--g900:#111827;
+  --wa:#25d366;--wad:#1da851;--r:12px;
+}
+html,body{height:100%;width:100%;overflow:hidden}
+body{
+  font-family:'Montserrat',-apple-system,sans-serif;
+  background:radial-gradient(ellipse at center,#1a1f2e 0%,#0a0d14 100%);
+  color:var(--wh);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100dvh;padding:20px;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ==== Phone frame ==== */
+.stage{display:flex;flex-direction:column;align-items:center;gap:18px}
+.phone{
+  width:390px;height:844px;
+  background:#000;
+  border-radius:46px;
+  padding:11px;
+  box-shadow:
+    0 0 0 2px #2a2e3a,
+    0 30px 80px rgba(0,0,0,.7),
+    0 0 60px rgba(212,168,67,.08);
+  position:relative;
+  flex-shrink:0;
+}
+.phone::before{
+  content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:120px;height:30px;background:#000;border-radius:20px;z-index:30;
+}
+.screen{
+  width:100%;height:100%;
+  background:var(--g50);
+  border-radius:36px;
+  overflow:hidden;
+  position:relative;
+}
+
+/* ==== Steps container ==== */
+.step{
+  position:absolute;inset:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .45s ease;
+  display:flex;flex-direction:column;
+  background:var(--g50);
+}
+.step.active{opacity:1;pointer-events:auto;z-index:5}
+
+/* ==== Header (catalog) ==== */
+.hd{
+  background:linear-gradient(135deg,var(--nv),var(--nvl));
+  color:var(--wh);padding:14px 14px 12px;
+  flex-shrink:0;
+}
+.hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-i{width:38px;height:38px;background:var(--gd);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--nv)}
+.logo-t{display:flex;flex-direction:column;line-height:1.1}
+.logo-n{font-weight:800;font-size:15px;letter-spacing:.5px}
+.logo-s{font-size:9px;opacity:.7;letter-spacing:1.5px;text-transform:uppercase}
+.hd-actions{display:flex;align-items:center;gap:6px}
+.gal-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 11px;background:linear-gradient(135deg,var(--gd),var(--gl));
+  color:var(--nv);border:none;border-radius:9px;
+  font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+}
+.cb{
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);
+  border-radius:50%;width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;color:var(--wh);
+  position:relative;
+}
+.cb svg{width:18px;height:18px}
+.cbg{position:absolute;top:-3px;right:-3px;background:var(--gd);color:var(--nv);font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+/* ==== Search bar ==== */
+.sc{position:relative}
+.si{
+  width:100%;padding:11px 16px 11px 38px;
+  border:none;border-radius:var(--r);
+  font-size:13px;font-family:inherit;
+  background:rgba(255,255,255,.15);color:var(--wh);outline:none;
+}
+.si::placeholder{color:rgba(255,255,255,.5)}
+.si-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5;color:var(--wh)}
+.si-ico svg{width:16px;height:16px}
+.si-typed{
+  position:absolute;left:38px;top:50%;transform:translateY(-50%);
+  font-size:13px;font-weight:600;color:var(--wh);pointer-events:none;
+}
+.cursor-blink{
+  display:inline-block;width:2px;height:14px;background:var(--wh);
+  vertical-align:middle;margin-left:1px;animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0}}
+
+/* ==== Categories chips ==== */
+.cats{display:flex;gap:7px;padding:10px 14px;overflow:hidden;background:var(--wh);border-bottom:1px solid var(--g100)}
+.cc{
+  flex-shrink:0;padding:7px 13px;border-radius:18px;
+  font-size:11px;font-weight:600;
+  border:1.5px solid var(--g200);background:var(--wh);color:var(--g700);
+  white-space:nowrap;transition:all .25s;
+}
+.cc.ac{background:var(--nv);color:var(--wh);border-color:var(--nv)}
+
+/* ==== Hero ==== */
+.hero{
+  height:130px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0a1640 0%,#001860 50%,#0a1640 100%);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--wh);text-align:center;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 30%,rgba(212,168,67,.15),transparent 60%),
+             radial-gradient(circle at 70% 70%,rgba(0,42,143,.4),transparent 60%);
+}
+.hero-content{position:relative;z-index:2;padding:14px}
+.hero-title{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;opacity:.85;margin-bottom:4px}
+.hero-main{font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--wh),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:5px}
+.hero-sub{font-size:11px;opacity:.75}
+.hero-badges{display:flex;justify-content:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+.hero-badge{font-size:9px;font-weight:700;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:3px 9px}
+
+/* ==== Product list ==== */
+.pl{padding:10px 12px;flex:1;overflow:hidden}
+.ri{padding:4px 4px 8px;font-size:11px;color:var(--g500);display:flex;justify-content:space-between}
+.pc{
+  background:var(--wh);border-radius:var(--r);margin-bottom:8px;
+  box-shadow:0 2px 10px rgba(0,24,96,.07);
+  border:1px solid var(--g100);overflow:hidden;
+  opacity:0;transform:translateY(8px);
+}
+.pc.show{animation:fiu .4s ease forwards}
+@keyframes fiu{to{opacity:1;transform:translateY(0)}}
+.ph{padding:11px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pm{flex:1;min-width:0}
+.p-code{font-size:14px;font-weight:800;color:var(--nv);margin-bottom:2px}
+.p-desc{font-size:11px;color:var(--g500);line-height:1.35}
+.p-badge{flex-shrink:0;font-size:8px;font-weight:700;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:var(--g100);color:var(--g500)}
+.eq-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.eq-tag{font-size:9px;padding:2px 6px;border-radius:5px;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+.eq-mahle{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.eq-nubo{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+.eq-label{opacity:.7;font-weight:500;font-size:8px;text-transform:uppercase}
+mark{background:var(--gl);color:var(--nv);padding:0 2px;border-radius:2px}
+
+/* ==== Filters / dim bar ==== */
+.dim-bar{
+  display:flex;gap:7px;padding:8px 14px;background:var(--wh);
+  border-bottom:1px solid var(--g200);align-items:flex-end;overflow:hidden;
+}
+.df-field{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.df-label{font-size:9px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.3px}
+.df-input{
+  width:100%;padding:7px 9px;border:1.5px solid var(--g200);border-radius:7px;
+  font-size:12px;font-family:inherit;font-weight:600;color:var(--g900);
+  background:var(--g50);
+}
+
+/* ==== Cart panel ==== */
+.cart-panel{
+  position:absolute;left:0;right:0;bottom:0;
+  background:var(--wh);
+  border-radius:20px 20px 0 0;
+  max-height:75%;display:flex;flex-direction:column;
+  box-shadow:0 -10px 40px rgba(0,0,0,.2);
+  transform:translateY(100%);transition:transform .5s cubic-bezier(.32,.72,0,1);
+}
+.cart-panel.show{transform:translateY(0)}
+.c-hdl{width:40px;height:4px;background:var(--g300);border-radius:2px;margin:10px auto}
+.c-ttl{padding:6px 18px 14px;font-size:16px;font-weight:800;display:flex;justify-content:space-between;color:var(--g900)}
+.c-items{padding:0 18px;flex:1;overflow:hidden}
+.ci{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--g100)}
+.ci-c{font-weight:800;font-size:13px;color:var(--nv)}
+.ci-d{font-size:10px;color:var(--g500);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.ci-sm{display:inline-block;font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;background:#0369a1;color:var(--wh);margin-left:5px;letter-spacing:.3px}
+.ci-q{font-size:13px;font-weight:800;color:var(--g900)}
+.cf{padding:14px 18px 18px;border-top:1px solid var(--g200)}
+.c-tot{display:flex;justify-content:space-between;margin-bottom:11px;font-weight:700;font-size:13px}
+.wa-btn{
+  width:100%;padding:13px;background:var(--wa);color:var(--wh);
+  border:none;border-radius:11px;font-family:inherit;font-size:14px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.wa-btn svg{width:20px;height:20px}
+
+/* ==== SM modal ==== */
+.sm-modal-backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,.4);
+  z-index:20;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.sm-modal-backdrop.show{opacity:1;pointer-events:auto}
+.sm-modal{
+  position:absolute;left:18px;right:18px;top:50%;transform:translate(0,-50%) scale(.92);
+  background:var(--wh);border-radius:18px;padding:18px;z-index:21;
+  opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 30px 60px rgba(0,0,0,.25);
+}
+.sm-modal.show{opacity:1;pointer-events:auto;transform:translate(0,-50%) scale(1)}
+.sm-modal-title{font-size:14px;font-weight:800;color:var(--nv);margin-bottom:4px}
+.sm-modal-desc{font-size:11px;color:var(--g500);margin-bottom:14px}
+.sm-modal-label{font-size:10px;font-weight:700;color:var(--g700);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.sm-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sm-chip{
+  padding:7px 13px;border-radius:18px;font-size:12px;font-weight:700;
+  border:1.5px solid #7dd3fc;background:#e0f2fe;color:#0369a1;
+  font-family:inherit;letter-spacing:.3px;transition:all .25s;
+}
+.sm-chip.sm-std{border-color:var(--g300);background:var(--g50);color:var(--g700)}
+.sm-chip.ac{background:#0369a1;color:var(--wh);border-color:#0369a1;box-shadow:0 4px 12px rgba(3,105,161,.4);transform:scale(1.05)}
+.sm-confirm{
+  width:100%;padding:11px;background:var(--nv);color:var(--wh);
+  border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:700;
+}
+
+/* ==== WhatsApp simulated msg ==== */
+.wa-screen{
+  position:absolute;inset:0;background:#0b141b;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transition:opacity .4s;z-index:25;
+}
+.wa-screen.show{opacity:1;pointer-events:auto}
+.wa-header{
+  background:#1f2c33;padding:12px 14px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid #2a3942;
+}
+.wa-back{color:#aebac1;font-size:20px;font-weight:300}
+.wa-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--gd);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--nv);font-weight:800;font-size:13px;
+}
+.wa-name{flex:1;color:#e9edef;font-size:14px;font-weight:600}
+.wa-name small{display:block;color:#8696a0;font-size:11px;font-weight:400;margin-top:1px}
+.wa-body{
+  flex:1;padding:18px 14px;overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.03),transparent),
+    #0b141b;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.wa-bubble{
+  background:#005c4b;color:#e9edef;
+  padding:10px 12px;border-radius:8px 8px 0 8px;
+  align-self:flex-end;max-width:90%;font-size:12px;line-height:1.45;
+  box-shadow:0 1px 0 rgba(0,0,0,.2);
+  white-space:pre-wrap;
+  opacity:0;transform:translateY(10px);
+}
+.wa-bubble.show{animation:waPop .35s ease forwards}
+@keyframes waPop{to{opacity:1;transform:translateY(0)}}
+.wa-bubble b{color:#fff}
+.wa-time{font-size:9px;color:#8696a0;margin-top:3px;text-align:right}
+
+/* ==== Final screen ==== */
+.final-screen{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--nv),var(--nvl) 60%,#0a1640);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--wh);padding:30px;text-align:center;
+}
+.final-logo{
+  width:130px;height:130px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gd),var(--gl));
+  display:flex;align-items:center;justify-content:center;
+  color:var(--nv);font-size:34px;font-weight:800;letter-spacing:1px;
+  box-shadow:0 20px 60px rgba(212,168,67,.4);
+  margin-bottom:24px;
+  animation:logoPulse 2s ease-in-out infinite;
+}
+@keyframes logoPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.04)}
+}
+.final-brand{font-size:14px;font-weight:600;letter-spacing:3px;text-transform:uppercase;opacity:.8;margin-bottom:6px}
+.final-title{font-size:30px;font-weight:800;margin-bottom:14px;background:linear-gradient(90deg,var(--wh),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.final-url{
+  font-size:13px;font-weight:700;background:rgba(255,255,255,.1);
+  border:1.5px solid rgba(212,168,67,.4);
+  padding:10px 18px;border-radius:30px;letter-spacing:.5px;
+  margin-bottom:18px;color:var(--gl);
+}
+.final-tag{font-size:12px;opacity:.85;line-height:1.6;font-weight:500}
+.final-tag b{color:var(--gl);font-weight:800}
+
+/* ==== Touch / cursor ==== */
+.cursor{
+  position:absolute;width:34px;height:34px;
+  background:radial-gradient(circle,rgba(255,255,255,.95) 0%,rgba(255,255,255,.4) 60%,transparent 80%);
+  border:2px solid rgba(0,24,96,.6);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:50;
+  opacity:0;
+  transition:opacity .25s, top .9s cubic-bezier(.4,0,.2,1), left .9s cubic-bezier(.4,0,.2,1);
+  transform:translate(-50%,-50%);
+}
+.cursor.show{opacity:1}
+.cursor.tap{animation:tapAnim .35s ease}
+@keyframes tapAnim{
+  0%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-50%,-50%) scale(.65)}
+  100%{transform:translate(-50%,-50%) scale(1)}
+}
+.tap-ripple{
+  position:absolute;width:20px;height:20px;
+  border:2px solid rgba(0,24,96,.7);border-radius:50%;
+  pointer-events:none;z-index:49;
+  transform:translate(-50%,-50%);
+  animation:ripple .6s ease-out forwards;
+}
+@keyframes ripple{
+  0%{opacity:.9;width:20px;height:20px}
+  100%{opacity:0;width:80px;height:80px}
+}
+
+/* ==== Overlay text ==== */
+.overlay-text{
+  position:absolute;left:18px;right:18px;bottom:30px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px 16px;
+  color:var(--wh);
+  z-index:40;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .4s ease, transform .4s ease;
+  text-align:center;
+}
+.overlay-text.show{opacity:1;transform:translateY(0)}
+.overlay-text-title{
+  font-size:14px;font-weight:800;
+  background:linear-gradient(90deg,var(--gl),#fff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:3px;letter-spacing:.3px;
+}
+.overlay-text-sub{font-size:11px;opacity:.85;line-height:1.4}
+
+/* ==== Step indicator chip top ==== */
+.step-chip{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  color:var(--wh);font-size:10px;font-weight:700;letter-spacing:1px;
+  padding:5px 12px;border-radius:14px;z-index:35;
+  border:1px solid rgba(255,255,255,.1);
+  text-transform:uppercase;
+}
+
+/* ==== Controls ==== */
+.controls{
+  width:390px;
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:14px 16px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.progress-row{display:flex;gap:5px;align-items:center}
+.pstep{
+  flex:1;height:5px;background:rgba(255,255,255,.12);border-radius:3px;
+  cursor:pointer;overflow:hidden;position:relative;transition:background .2s;
+}
+.pstep:hover{background:rgba(255,255,255,.2)}
+.pstep-fill{
+  position:absolute;inset:0;width:0;
+  background:linear-gradient(90deg,var(--gd),var(--gl));
+  border-radius:3px;
+}
+.pstep.done .pstep-fill{width:100%}
+.pstep.active .pstep-fill{width:var(--p,0%);transition:none}
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ctrl-info{font-size:11px;color:rgba(255,255,255,.65);font-weight:600;letter-spacing:.3px}
+.ctrl-info b{color:var(--gl)}
+.ctrl-buttons{display:flex;gap:8px}
+.ctrl-btn{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gd),var(--gl));
+  border:none;color:var(--nv);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-weight:800;
+  box-shadow:0 6px 20px rgba(212,168,67,.3);
+  transition:transform .15s;
+}
+.ctrl-btn:hover{transform:scale(1.06)}
+.ctrl-btn.secondary{
+  background:rgba(255,255,255,.08);
+  color:var(--wh);
+  box-shadow:none;
+  border:1px solid rgba(255,255,255,.15);
+}
+.ctrl-btn svg{width:18px;height:18px}
+
+.brand-tag{
+  position:absolute;top:14px;left:18px;
+  font-size:9px;font-weight:700;color:rgba(255,255,255,.4);
+  letter-spacing:2px;text-transform:uppercase;z-index:60;
+}
+
+@media(max-width:430px){
+  .phone{transform:scale(.9);transform-origin:top center}
+  .controls{width:90%}
+}
+</style>
+</head>
+<body>
+
+<div class="brand-tag">DEMO TUTORIAL · 300-INDY</div>
+
+<div class="stage">
+  <div class="phone">
+    <div class="screen" id="screen">
+
+      <!-- STEP 1: Home -->
+      <div class="step" data-step="1">
+        <div class="hd">
+          <div class="hd-top">
+            <div class="logo">
+              <div class="logo-i">300</div>
+              <div class="logo-t">
+                <span class="logo-n">300-INDY</span>
+                <span class="logo-s">Pongolini SRL</span>
+              </div>
+            </div>
+            <div class="hd-actions">
+              <button class="gal-btn">Galería</button>
+              <div class="cb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <span class="si-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+            <input class="si" placeholder="Buscar por código, descripción o medida…" readonly>
+          </div>
+        </div>
+        <div class="cats">
+          <div class="cc ac">Todos</div>
+          <div class="cc">Guías</div>
+          <div class="cc">Asientos</div>
+          <div class="cc">Pistones</div>
+        </div>
+        <div class="hero">
+          <div class="hero-content">
+            <div class="hero-title">Catálogo Digital</div>
+            <div class="hero-main">300-INDY</div>
+            <div class="hero-sub">Repuestos para motor de calidad superior</div>
+            <div class="hero-badges">
+              <div class="hero-badge">+2500 productos</div>
+              <div class="hero-badge">MAHLE · NUBO</div>
+            </div>
+          </div>
+        </div>
+        <div class="pl">
+          <div class="ri"><span>Mostrando categorías destacadas</span></div>
+          <div class="pc show"><div class="ph">
+            <div class="pm">
+              <div class="p-code">Guías de Válvula</div>
+              <div class="p-desc">Más de 800 referencias para todas las marcas</div>
+            </div>
+            <div class="p-badge">800+</div>
+          </div></div>
+          <div class="pc show" style="animation-delay:.1s"><div class="ph">
+            <div class="pm">
+              <div class="p-code">Asientos de Válvula</div>
+              <div class="p-desc">Aleaciones de alta resistencia térmica</div>
+            </div>
+            <div class="p-badge">600+</div>
+          </div></div>
+          <div class="pc show" style="animation-delay:.2s"><div class="ph">
+            <div class="pm">
+              <div class="p-code">Camisas / Pistones</div>
+              <div class="p-desc">Tolerancias de fábrica · STD y sobremedidas</div>
+            </div>
+            <div class="p-badge">500+</div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 2: Search G1901 -->
+      <div class="step" data-step="2">
+        <div class="hd">
+          <div class="hd-top">
+            <div class="logo">
+              <div class="logo-i">300</div>
+              <div class="logo-t">
+                <span class="logo-n">300-INDY</span>
+                <span class="logo-s">Pongolini SRL</span>
+              </div>
+            </div>
+            <div class="hd-actions">
+              <button class="gal-btn">Galería</button>
+              <div class="cb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="sc" id="sc2">
+            <span class="si-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+            <input class="si" id="si2" placeholder="Buscar…" readonly>
+            <span class="si-typed" id="typed2"></span>
+          </div>
+        </div>
+        <div class="pl">
+          <div class="ri" id="ri2"><span>Resultados</span></div>
+          <div id="results2"></div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Search MAHLE code -->
+      <div class="step" data-step="3">
+        <div class="hd">
+          <div class="hd-top">
+            <div class="logo">
+              <div class="logo-i">300</div>
+              <div class="logo-t">
+                <span class="logo-n">300-INDY</span>
+                <span class="logo-s">Pongolini SRL</span>
+              </div>
+            </div>
+            <div class="hd-actions">
+              <button class="gal-btn">Galería</button>
+              <div class="cb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <span class="si-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+            <input class="si" id="si3" placeholder="Buscar…" readonly>
+            <span class="si-typed" id="typed3"></span>
+          </div>
+        </div>
+        <div class="pl">
+          <div class="ri" id="ri3"><span>Resultados</span></div>
+          <div id="results3"></div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Category + filters -->
+      <div class="step" data-step="4">
+        <div class="hd">
+          <div class="hd-top">
+            <div class="logo">
+              <div class="logo-i">300</div>
+              <div class="logo-t">
+                <span class="logo-n">300-INDY</span>
+                <span class="logo-s">Pongolini SRL</span>
+              </div>
+            </div>
+            <div class="hd-actions">
+              <button class="gal-btn">Galería</button>
+              <div class="cb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <span class="si-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+            <input class="si" placeholder="Buscar…" readonly>
+          </div>
+        </div>
+        <div class="cats">
+          <div class="cc">Todos</div>
+          <div class="cc ac" id="cc4">Guías de Válvula</div>
+          <div class="cc">Asientos</div>
+          <div class="cc">Pistones</div>
+        </div>
+        <div class="dim-bar" id="dimbar4">
+          <div class="df-field"><span class="df-label">D.E</span><input class="df-input" id="dimDE" placeholder="mm" readonly></div>
+          <div class="df-field"><span class="df-label">D.I</span><input class="df-input" id="dimDI" placeholder="mm" readonly></div>
+          <div class="df-field"><span class="df-label">Largo</span><input class="df-input" id="dimL" placeholder="mm" readonly></div>
+        </div>
+        <div class="pl">
+          <div class="ri"><span><b>Guías de Válvula</b> · 832 ítems</span></div>
+          <div class="pc show"><div class="ph">
+            <div class="pm">
+              <div class="p-code">G1901B</div>
+              <div class="p-desc">GUIA VW GOL 1.6/1.8 ADM/ESC</div>
+            </div>
+            <div class="p-badge">STOCK</div>
+          </div></div>
+          <div class="pc show" style="animation-delay:.1s"><div class="ph">
+            <div class="pm">
+              <div class="p-code">G1037</div>
+              <div class="p-desc">GUIA FORD FALCON 6CIL ADM</div>
+            </div>
+            <div class="p-badge">STOCK</div>
+          </div></div>
+          <div class="pc show" style="animation-delay:.2s"><div class="ph">
+            <div class="pm">
+              <div class="p-code">G1018B</div>
+              <div class="p-desc">GUIA RENAULT 1.4/1.6 ESC</div>
+            </div>
+            <div class="p-badge">STOCK</div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 5: Add → SM modal -->
+      <div class="step" data-step="5">
+        <div class="hd">
+          <div class="hd-top">
+            <div class="logo">
+              <div class="logo-i">300</div>
+              <div class="logo-t">
+                <span class="logo-n">300-INDY</span>
+                <span class="logo-s">Pongolini SRL</span>
+              </div>
+            </div>
+            <div class="hd-actions">
+              <button class="gal-btn">Galería</button>
+              <div class="cb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <span class="si-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+            <input class="si" placeholder="Buscar…" readonly>
+          </div>
+        </div>
+        <div class="pl">
+          <div class="ri"><span><b>Guías de Válvula</b> · resultado</span></div>
+          <div class="pc show"><div class="ph">
+            <div class="pm">
+              <div class="p-code">G1901B</div>
+              <div class="p-desc">GUIA VW GOL 1.6/1.8 ADM/ESC · 11.07 × 7.00 × 53.00 mm</div>
+              <div class="eq-row">
+                <span class="eq-tag eq-mahle"><span class="eq-label">MAHLE</span> GC0700080</span>
+                <span class="eq-tag eq-nubo"><span class="eq-label">NUBO</span> NB7080</span>
+              </div>
+            </div>
+            <button class="p-badge" id="addBtn5" style="background:var(--nv);color:#fff;font-size:10px;padding:6px 14px;cursor:pointer">+ Agregar</button>
+          </div></div>
+        </div>
+
+        <!-- SM Modal -->
+        <div class="sm-modal-backdrop" id="smBackdrop5"></div>
+        <div class="sm-modal" id="smModal5">
+          <div class="sm-modal-title">Sobremedida</div>
+          <div class="sm-modal-desc">G1901B — Elegí la sobremedida antes de agregar al carrito</div>
+          <div class="sm-modal-label">Disponibles</div>
+          <div class="sm-chips" id="smChips5">
+            <div class="sm-chip sm-std" data-sm="STD">STD</div>
+            <div class="sm-chip" data-sm="+0.03">+0.03</div>
+            <div class="sm-chip" data-sm="+0.05">+0.05</div>
+            <div class="sm-chip" data-sm="+0.10">+0.10</div>
+            <div class="sm-chip" data-sm="+0.15">+0.15</div>
+            <div class="sm-chip" data-sm="+0.20">+0.20</div>
+            <div class="sm-chip" data-sm="OTRAS">Otras</div>
+          </div>
+          <button class="sm-confirm">Agregar al carrito</button>
+        </div>
+      </div>
+
+      <!-- STEP 6: Cart + WhatsApp -->
+      <div class="step" data-step="6">
+        <div class="hd">
+          <div class="hd-top">
+            <div class="logo">
+              <div class="logo-i">300</div>
+              <div class="logo-t">
+                <span class="logo-n">300-INDY</span>
+                <span class="logo-s">Pongolini SRL</span>
+              </div>
+            </div>
+            <div class="hd-actions">
+              <button class="gal-btn">Galería</button>
+              <div class="cb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span class="cbg">2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart panel always-visible for this step -->
+        <div class="cart-panel show" id="cart6" style="position:relative;flex:1;max-height:none;border-radius:0">
+          <div class="c-hdl"></div>
+          <div class="c-ttl">
+            <span>Tu pedido</span>
+            <span style="color:var(--g500);font-size:13px">2 ítems</span>
+          </div>
+          <div class="c-items">
+            <div class="ci">
+              <div>
+                <div class="ci-c">G1901B <span class="ci-sm">+0.05</span></div>
+                <div class="ci-d">GUIA VW GOL 1.6/1.8 ADM/ESC</div>
+              </div>
+              <div class="ci-q">× 10</div>
+            </div>
+            <div class="ci">
+              <div>
+                <div class="ci-c">G1037 <span class="ci-sm is-std" style="background:var(--g700)">STD</span></div>
+                <div class="ci-d">GUIA FORD FALCON 6CIL ADM</div>
+              </div>
+              <div class="ci-q">× 4</div>
+            </div>
+          </div>
+          <div class="cf">
+            <div class="c-tot"><span>Total ítems</span><span>14 unidades</span></div>
+            <button class="wa-btn" id="waBtn6">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24z"/></svg>
+              Enviar pedido por WhatsApp
+            </button>
+          </div>
+        </div>
+
+        <!-- WhatsApp simulated screen -->
+        <div class="wa-screen" id="waScreen6">
+          <div class="wa-header">
+            <div class="wa-back">‹</div>
+            <div class="wa-avatar">300</div>
+            <div class="wa-name">Pongolini SRL <small>en línea</small></div>
+          </div>
+          <div class="wa-body">
+            <div class="wa-bubble" id="waBubble6">*Pedido 300-INDY*
+
+• G1901B <b>+0.05</b> × 10
+  GUIA VW GOL 1.6/1.8
+
+• G1037 <b>STD</b> × 4
+  GUIA FORD FALCON 6CIL
+
+Total: <b>14 unidades</b>
+<div class="wa-time">14:32 ✓✓</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7: Final -->
+      <div class="step" data-step="7">
+        <div class="final-screen">
+          <div class="final-logo">300<br><span style="font-size:14px;letter-spacing:3px">INDY</span></div>
+          <div class="final-brand">Aberaldo Pongolini SRL</div>
+          <div class="final-title">Catálogo 300-INDY</div>
+          <div class="final-url">pongolini.netlify.app</div>
+          <div class="final-tag">Disponible <b>24 hs</b> · Desde <b>cualquier dispositivo</b></div>
+        </div>
+      </div>
+
+      <!-- Cursor and overlays -->
+      <div class="cursor" id="cursor"></div>
+      <div class="step-chip" id="stepChip">PASO 1 / 7</div>
+      <div class="overlay-text" id="overlay">
+        <div class="overlay-text-title" id="overlayTitle">Catálogo Digital 300-INDY</div>
+        <div class="overlay-text-sub" id="overlaySub">Más de 2500 productos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="progress-row" id="progressRow">
+      <div class="pstep" data-i="0"><div class="pstep-fill"></div></div>
+      <div class="pstep" data-i="1"><div class="pstep-fill"></div></div>
+      <div class="pstep" data-i="2"><div class="pstep-fill"></div></div>
+      <div class="pstep" data-i="3"><div class="pstep-fill"></div></div>
+      <div class="pstep" data-i="4"><div class="pstep-fill"></div></div>
+      <div class="pstep" data-i="5"><div class="pstep-fill"></div></div>
+      <div class="pstep" data-i="6"><div class="pstep-fill"></div></div>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl-info">Paso <b id="ctrlStep">1</b> · <span id="ctrlLabel">Inicio</span></div>
+      <div class="ctrl-buttons">
+        <button class="ctrl-btn secondary" id="restartBtn" title="Reiniciar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"/><path d="M3 21v-5h5"/></svg>
+        </button>
+        <button class="ctrl-btn" id="playBtn" title="Pausar/Reproducir">
+          <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const STEPS = [
+    {dur:3000, label:'Inicio',          title:'Catálogo Digital 300-INDY',  sub:'Más de 2500 productos'},
+    {dur:4500, label:'Buscar Pongolini',title:'Buscá por código Pongolini', sub:'Empezá a tipear y aparecen los resultados'},
+    {dur:4500, label:'Buscar MAHLE',    title:'O por código MAHLE / NUBO',  sub:'Encontramos el equivalente automáticamente'},
+    {dur:3500, label:'Filtrar',         title:'Filtrá por categoría',       sub:'Refiná por D.E, D.I y largo'},
+    {dur:5500, label:'Sobremedida',     title:'Elegí la sobremedida',       sub:'STD · +0.03 · +0.05 · +0.10 · +0.15 · +0.20'},
+    {dur:4500, label:'WhatsApp',        title:'Enviá tu pedido',            sub:'Llega formateado por WhatsApp'},
+    {dur:3500, label:'Final',           title:'Disponible 24 hs',           sub:'Desde cualquier dispositivo'},
+  ];
+
+  const screen = document.getElementById('screen');
+  const stepEls = document.querySelectorAll('.step');
+  const overlay = document.getElementById('overlay');
+  const overlayTitle = document.getElementById('overlayTitle');
+  const overlaySub = document.getElementById('overlaySub');
+  const stepChip = document.getElementById('stepChip');
+  const cursor = document.getElementById('cursor');
+  const progressSteps = document.querySelectorAll('.pstep');
+  const playBtn = document.getElementById('playBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const restartBtn = document.getElementById('restartBtn');
+  const ctrlStep = document.getElementById('ctrlStep');
+  const ctrlLabel = document.getElementById('ctrlLabel');
+
+  let currentStep = 0;
+  let playing = true;
+  let stepStartTime = 0;
+  let elapsedInStep = 0;
+  let rafId = null;
+  let timeouts = [];
+  let stepCleanups = [];
+
+  function clearAllTimeouts(){
+    timeouts.forEach(t=>clearTimeout(t));
+    timeouts = [];
+    stepCleanups.forEach(fn=>{ try{fn()}catch(e){} });
+    stepCleanups = [];
+  }
+  function later(fn, ms){
+    const t = setTimeout(fn, ms);
+    timeouts.push(t);
+    return t;
+  }
+
+  function setOverlay(title, sub){
+    overlayTitle.textContent = title;
+    overlaySub.textContent = sub;
+    overlay.classList.add('show');
+  }
+  function hideOverlay(){ overlay.classList.remove('show'); }
+
+  function showCursor(x,y){
+    cursor.style.left = x+'px';
+    cursor.style.top = y+'px';
+    cursor.classList.add('show');
+  }
+  function moveCursor(x,y){
+    cursor.style.left = x+'px';
+    cursor.style.top = y+'px';
+  }
+  function tap(x,y){
+    moveCursor(x,y);
+    cursor.classList.add('tap');
+    later(()=>cursor.classList.remove('tap'), 350);
+    const r = document.createElement('div');
+    r.className = 'tap-ripple';
+    r.style.left = x+'px'; r.style.top = y+'px';
+    screen.appendChild(r);
+    later(()=>r.remove(), 600);
+  }
+  function hideCursor(){ cursor.classList.remove('show'); }
+
+  function typeInto(elTyped, text, perChar, done){
+    elTyped.innerHTML = '<span class="cursor-blink"></span>';
+    let i = 0;
+    function next(){
+      if(i > text.length){
+        if(done) done();
+        return;
+      }
+      elTyped.innerHTML = text.slice(0,i) + '<span class="cursor-blink"></span>';
+      i++;
+      later(next, perChar);
+    }
+    next();
+  }
+
+  // ---- STEP RUNNERS ----
+  function runStep1(){
+    setOverlay('Catálogo Digital 300-INDY', 'Más de 2500 productos · Aberaldo Pongolini SRL');
+  }
+
+  function runStep2(){
+    const sc = document.getElementById('sc2');
+    const typed = document.getElementById('typed2');
+    const ri = document.getElementById('ri2');
+    const results = document.getElementById('results2');
+    typed.innerHTML = '';
+    results.innerHTML = '';
+    ri.querySelector('span').textContent = 'Empezá a tipear';
+
+    const rect = sc.getBoundingClientRect();
+    const screenRect = screen.getBoundingClientRect();
+    const cx = rect.left - screenRect.left + rect.width/2;
+    const cy = rect.top - screenRect.top + rect.height/2;
+
+    showCursor(screenRect.width/2, screenRect.height + 50);
+    later(()=>{
+      moveCursor(cx, cy);
+      later(()=>{
+        tap(cx, cy);
+        later(()=>{
+          setOverlay('Buscá por código Pongolini', 'Empezá a tipear y aparecen los resultados al instante');
+          typeInto(typed, 'G1901', 110, ()=>{
+            const items = [
+              {c:'G1901B', d:'GUIA VW GOL 1.6/1.8 ADM/ESC'},
+              {c:'G1901C', d:'GUIA VW GOLF 1.8 ADM'},
+              {c:'G1901D', d:'GUIA VW POLO 1.6 ESC'},
+            ];
+            ri.querySelector('span').innerHTML = '<b>3 resultados</b> para "G1901"';
+            items.forEach((it,idx)=>{
+              const div = document.createElement('div');
+              div.className = 'pc show';
+              div.style.animationDelay = (idx*.08)+'s';
+              div.innerHTML = `<div class="ph">
+                <div class="pm">
+                  <div class="p-code"><mark>G1901</mark>${it.c.slice(5)}</div>
+                  <div class="p-desc">${it.d}</div>
+                </div>
+                <div class="p-badge">STOCK</div>
+              </div>`;
+              results.appendChild(div);
+            });
+            later(hideCursor, 800);
+          });
+        }, 200);
+      }, 700);
+    }, 400);
+  }
+
+  function runStep3(){
+    const typed = document.getElementById('typed3');
+    const ri = document.getElementById('ri3');
+    const results = document.getElementById('results3');
+    typed.innerHTML = '';
+    results.innerHTML = '';
+    ri.querySelector('span').textContent = 'Probá con un código MAHLE';
+
+    setOverlay('O por código MAHLE / NUBO', 'El catálogo encuentra el equivalente Pongolini');
+
+    later(()=>{
+      typeInto(typed, 'GC0700080', 90, ()=>{
+        ri.querySelector('span').innerHTML = '<b>1 resultado</b> · cruce MAHLE encontrado';
+        const div = document.createElement('div');
+        div.className = 'pc show';
+        div.innerHTML = `<div class="ph">
+          <div class="pm">
+            <div class="p-code">G1901B</div>
+            <div class="p-desc">GUIA VW GOL 1.6/1.8 ADM/ESC · 11.07 × 7.00 × 53.00 mm</div>
+            <div class="eq-row">
+              <span class="eq-tag eq-mahle"><span class="eq-label">MAHLE</span> <mark>GC0700080</mark></span>
+              <span class="eq-tag eq-nubo"><span class="eq-label">NUBO</span> NB7080</span>
+            </div>
+          </div>
+          <div class="p-badge">STOCK</div>
+        </div>`;
+        results.appendChild(div);
+      });
+    }, 600);
+  }
+
+  function runStep4(){
+    setOverlay('Filtrá por categoría y dimensiones', 'Tocá una categoría → aparecen los filtros de medida');
+
+    const cc = document.getElementById('cc4');
+    const dimDE = document.getElementById('dimDE');
+    const dimDI = document.getElementById('dimDI');
+    const dimL = document.getElementById('dimL');
+    dimDE.value = ''; dimDI.value = ''; dimL.value = '';
+
+    const screenRect = screen.getBoundingClientRect();
+    const ccRect = cc.getBoundingClientRect();
+    const cx = ccRect.left - screenRect.left + ccRect.width/2;
+    const cy = ccRect.top - screenRect.top + ccRect.height/2;
+
+    showCursor(screenRect.width/2, screenRect.height/2);
+    later(()=>{
+      moveCursor(cx, cy);
+      later(()=>{
+        tap(cx, cy);
+        later(()=>{
+          // animate fields filling
+          const fillField = (el, val, delay) => later(()=>{
+            let i = 0;
+            function tick(){
+              if(i>val.length) return;
+              el.value = val.slice(0,i);
+              i++;
+              later(tick, 70);
+            }
+            tick();
+          }, delay);
+          fillField(dimDE, '11.07', 200);
+          fillField(dimDI, '7.00', 700);
+          fillField(dimL, '53', 1200);
+          later(hideCursor, 1400);
+        }, 250);
+      }, 700);
+    }, 400);
+  }
+
+  function runStep5(){
+    setOverlay('Elegí la sobremedida', 'Al agregar al carrito te pedimos la SM correcta para esa pieza');
+
+    const addBtn = document.getElementById('addBtn5');
+    const backdrop = document.getElementById('smBackdrop5');
+    const modal = document.getElementById('smModal5');
+    const chips = modal.querySelectorAll('.sm-chip');
+    chips.forEach(c=>c.classList.remove('ac'));
+    backdrop.classList.remove('show');
+    modal.classList.remove('show');
+
+    const screenRect = screen.getBoundingClientRect();
+    const btnRect = addBtn.getBoundingClientRect();
+    const cx = btnRect.left - screenRect.left + btnRect.width/2;
+    const cy = btnRect.top - screenRect.top + btnRect.height/2;
+
+    showCursor(screenRect.width-40, screenRect.height-40);
+    later(()=>{
+      moveCursor(cx, cy);
+      later(()=>{
+        tap(cx, cy);
+        later(()=>{
+          backdrop.classList.add('show');
+          modal.classList.add('show');
+          later(()=>{
+            const targetChip = modal.querySelector('[data-sm="+0.05"]');
+            const cR = targetChip.getBoundingClientRect();
+            const tx = cR.left - screenRect.left + cR.width/2;
+            const ty = cR.top - screenRect.top + cR.height/2;
+            moveCursor(tx, ty);
+            later(()=>{
+              tap(tx, ty);
+              targetChip.classList.add('ac');
+              later(hideCursor, 600);
+            }, 850);
+          }, 500);
+        }, 250);
+      }, 800);
+    }, 400);
+  }
+
+  function runStep6(){
+    setOverlay('Enviá tu pedido por WhatsApp', 'Llega formateado, listo para que lo procesemos');
+
+    const waBtn = document.getElementById('waBtn6');
+    const waScreen = document.getElementById('waScreen6');
+    const waBubble = document.getElementById('waBubble6');
+    waScreen.classList.remove('show');
+    waBubble.classList.remove('show');
+
+    const screenRect = screen.getBoundingClientRect();
+    const btnRect = waBtn.getBoundingClientRect();
+    const cx = btnRect.left - screenRect.left + btnRect.width/2;
+    const cy = btnRect.top - screenRect.top + btnRect.height/2;
+
+    showCursor(screenRect.width/2, screenRect.height-60);
+    later(()=>{
+      moveCursor(cx, cy);
+      later(()=>{
+        tap(cx, cy);
+        later(()=>{
+          waScreen.classList.add('show');
+          later(()=>{
+            waBubble.classList.add('show');
+            hideCursor();
+          }, 400);
+        }, 250);
+      }, 600);
+    }, 400);
+  }
+
+  function runStep7(){
+    setOverlay('Disponible 24 horas', 'Desde cualquier dispositivo · pongolini.netlify.app');
+    hideCursor();
+  }
+
+  const RUNNERS = [runStep1, runStep2, runStep3, runStep4, runStep5, runStep6, runStep7];
+
+  function showStep(idx){
+    clearAllTimeouts();
+    hideCursor();
+    stepEls.forEach(e=>e.classList.remove('active'));
+    const target = document.querySelector(`.step[data-step="${idx+1}"]`);
+    if(target) target.classList.add('active');
+    stepChip.textContent = `PASO ${idx+1} / ${STEPS.length}`;
+    ctrlStep.textContent = idx+1;
+    ctrlLabel.textContent = STEPS[idx].label;
+
+    progressSteps.forEach((p,i)=>{
+      p.classList.remove('done','active');
+      p.querySelector('.pstep-fill').style.width = '';
+      if(i<idx) p.classList.add('done');
+      if(i===idx) p.classList.add('active');
+    });
+
+    overlay.classList.remove('show');
+    later(()=>{
+      RUNNERS[idx]();
+    }, 300);
+  }
+
+  function tick(now){
+    if(!playing){ rafId = requestAnimationFrame(tick); return; }
+    if(!stepStartTime) stepStartTime = now;
+    const dt = now - stepStartTime - elapsedInStep;
+    elapsedInStep += dt;
+    const dur = STEPS[currentStep].dur;
+    const pct = Math.min(100, (elapsedInStep/dur)*100);
+    const fill = progressSteps[currentStep].querySelector('.pstep-fill');
+    progressSteps[currentStep].style.setProperty('--p', pct+'%');
+    fill.style.width = pct+'%';
+    if(elapsedInStep >= dur){
+      // advance
+      progressSteps[currentStep].classList.remove('active');
+      progressSteps[currentStep].classList.add('done');
+      fill.style.width = '100%';
+      currentStep++;
+      elapsedInStep = 0;
+      stepStartTime = now;
+      if(currentStep >= STEPS.length){
+        // hold on final step then loop
+        currentStep = STEPS.length - 1;
+        playing = false;
+        updatePlayIcon();
+      } else {
+        showStep(currentStep);
+      }
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function jumpTo(i){
+    currentStep = i;
+    elapsedInStep = 0;
+    stepStartTime = 0;
+    showStep(i);
+  }
+
+  function updatePlayIcon(){
+    if(playing){ playIcon.style.display='none'; pauseIcon.style.display='block'; }
+    else { playIcon.style.display='block'; pauseIcon.style.display='none'; }
+  }
+
+  playBtn.addEventListener('click', ()=>{
+    playing = !playing;
+    if(playing && currentStep === STEPS.length-1 && elapsedInStep >= STEPS[currentStep].dur-50){
+      // restart from beginning
+      jumpTo(0);
+    }
+    stepStartTime = 0;
+    updatePlayIcon();
+  });
+
+  restartBtn.addEventListener('click', ()=>{
+    playing = true;
+    jumpTo(0);
+    updatePlayIcon();
+  });
+
+  progressSteps.forEach((p,i)=>{
+    p.addEventListener('click', ()=>jumpTo(i));
+  });
+
+  // start
+  showStep(0);
+  rafId = requestAnimationFrame(tick);
+
+})();
+</script>
+</body>
+</html>
